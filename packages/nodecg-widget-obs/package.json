@@ -1,0 +1,36 @@
+{
+  "name": "nodecg-widget-obs",
+  "version": "1.0.0",
+  "description": "A NodeCG utility that provides a UI for configuring a connection to OBS via obs-websocket",
+  "main": "nodecg-widget-obs.html",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "wct",
+    "serve": "polyserve",
+    "postinstall": "bower install"
+  },
+  "author": {
+    "name": "Alex Van Camp",
+    "email": "email@alexvan.camp",
+    "url": "https://alexvan.camp/",
+    "twitter": "vancamp"
+  },
+  "license": "MIT",
+  "keywords": [
+    "nodecg",
+    "utility",
+    "ui",
+    "obs",
+    "helper",
+    "obs-websocket",
+    "obs-websocket-js",
+    "polymer"
+  ],
+  "devDependencies": {
+    "web-component-tester": "github:t2ym/web-component-tester#6.0.0-wct6-plugin.4",
+    "web-component-tester-istanbul": "github:t2ym/web-component-tester-istanbul#0.10.1-wct6.11",
+    "polyserve": "github:t2ym/polyserve.git#0.19.0-istanbul.1"
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "private": true,
+  "dependencies": {
+    "lerna": "^2.0.0-rc.5"
+  },
+  "devDependencies": {
+    "copyfiles": "^1.2.0",
+    "coveralls": "^2.11.8",
+    "eslint": "^3.19.0",
+    "eslint-config-xo": "^0.18.2",
+    "eslint-plugin-ava": "^4.2.0",
+    "eslint-plugin-html": "^2.0.3",
+    "sinon": "^2.3.1",
+    "weallbehave": "^1.2.0",
+    "weallcontribute": "^1.0.8",
+    "webpack": "^2.6.1"
+  },
+  "author": {
+    "name": "Alex Van Camp",
+    "email": "email@alexvan.camp",
+    "url": "https://alexvan.camp/",
+    "twitter": "vancamp"
+  },
+  "scripts": {
+    "move-reports": "copyfiles -f packages/*/{coverage,.nyc_output}/*.json .nyc_output",
+    "report": "npm run move-reports && nyc report --reporter=html --reporter=text",
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
+    "pretest": "eslint *.js packakges/**/*.js packages/**/*.html",
+    "test": "lerna run test",
+    "postinstall": "lerna bootstrap",
+    "update-coc": "weallbehave -o . && git add CODE_OF_CONDUCT.md && git commit -m 'docs(coc): updated CODE_OF_CONDUCT.md'",
+    "update-contrib": "weallcontribute -o . && git add CONTRIBUTING.md && git commit -m 'docs(contributing): updated CONTRIBUTING.md'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nodecg/nodecg-obs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nodecg/nodecg-obs/issues"
+  },
+  "eslintConfig": {
+    "extends": "xo/esnext",
+    "rules": {
+      "new-cap": [
+        2,
+        {
+          "capIsNewExceptions": [
+            "nodecg.Replicant"
+          ]
+        }
+      ]
+    },
+    "plugins": [
+      "html"
+    ]
+  },
+  "nyc": {
+    "reporter": [
+      "html",
+      "text"
+    ]
+  }
+}

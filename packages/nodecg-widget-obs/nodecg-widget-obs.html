@@ -1,0 +1,85 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../iron-pages/iron-pages.html">
+<link rel="import" href="../nodecg-toast/nodecg-toast.html">
+<link rel="import" href="../paper-tabs/paper-tabs.html">
+<link rel="import" href="nodecg-widget-obs-controls.html">
+<link rel="import" href="nodecg-widget-obs-led.html">
+
+<dom-module id="nodecg-widget-obs">
+	<template>
+		<style>
+			:host {
+				display: block;
+			}
+
+			#tabs {
+				--paper-tabs-selection-bar-color: #5BA664;
+				--paper-tab-ink: #5BA664;
+				--paper-tabs-selection-bar: {
+					border-bottom-width: 5px;
+				};
+				--paper-tab: {
+					padding: 0;
+				};
+				--paper-tab-content: {
+					font-size: 20px;
+					font-weight: bold;
+					border-left: 0.5px solid transparent;
+					border-right: 0.5px solid transparent;
+				};
+				--paper-tab-content-unselected: {
+					background-color: #E8E8E8;
+					border-left: 0.5px solid #E8E8E8;
+					border-right: 0.5px solid #E8E8E8;
+				}
+			}
+
+			paper-tab nodecg-widget-obs-led {
+				margin-right: 9px;
+			}
+
+			#pages {
+				padding: var(--nodecg-widget-obs-padding, 10px);
+			}
+
+			[hidden] {
+				display: none !important;
+			}
+		</style>
+
+		<paper-tabs id="tabs" selected="{{selected}}" hidden="[[_lessThan(numNamespaces, 2)]]">
+			<paper-tab>
+				<nodecg-widget-obs-led color="green"></nodecg-widget-obs-led>
+				1
+			</paper-tab>
+			<paper-tab>
+				<nodecg-widget-obs-led color="red"></nodecg-widget-obs-led>
+				2
+			</paper-tab>
+			<paper-tab hidden="[[_lessThan(numNamespaces, 3)]]">
+				<nodecg-widget-obs-led color="red"></nodecg-widget-obs-led>
+				3
+			</paper-tab>
+			<paper-tab hidden="[[_lessThan(numNamespaces, 4)]]">
+				<nodecg-widget-obs-led color="red"></nodecg-widget-obs-led>
+				4
+			</paper-tab>
+		</paper-tabs>
+
+		<iron-pages id="pages" selected="[[selected]]">
+			<template is="dom-repeat" items="[[namespaces]]" as="namespace">
+				<nodecg-widget-obs-controls
+					namespace="[[namespace]]"
+					on-status-changed="_handleControlsStatusChanged"
+					on-connected="_handleControlsConnected"
+					on-disconnected="_handleControlsDisconnected"
+					on-connection-failure="_handleControlsConnectionFailure"></nodecg-widget-obs-controls>
+			</template>
+		</iron-pages>
+
+		<nodecg-toast id="toast"></nodecg-toast>
+	</template>
+
+	<script src="nodecg-widget-obs.js"></script>
+</dom-module>

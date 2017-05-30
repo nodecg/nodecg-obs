@@ -1,0 +1,26 @@
+{
+	"type": "object",
+	"description": "Login information for OBS Websocket, used to communicate with and remotely control OBS Studio.",
+	"properties": {
+		"ip": {
+			"type": "string",
+			"default": "localhost",
+			"required": true
+		},
+		"port": {
+			"type": "number",
+			"default": 4444
+		},
+		"password": {
+			"type": "string",
+			"default": ""
+		},
+		"status": {
+			"type": "string",
+			"enum": ["connected", "connecting", "disconnected", "error"],
+			"default": "disconnected",
+			"required": true
+		}
+	},
+	"additionalProperties": false
+}

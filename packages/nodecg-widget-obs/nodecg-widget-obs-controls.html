@@ -1,0 +1,170 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../paper-button/paper-button.html">
+<link rel="import" href="../paper-input/paper-input.html">
+<link rel="import" href="nodecg-widget-obs-led.html">
+
+<dom-module id="nodecg-widget-obs-controls">
+	<template>
+		<style>
+			:host {
+				display: block;
+			}
+
+			#addressInputs {
+				@apply --layout-horizontal;
+			}
+
+			#ipAddress {
+				min-width: 250px;
+				@apply --layout-flex;
+			}
+
+			#port {
+				margin-left: 8px;
+				width: 122px;
+				flex-shrink: 1;
+			}
+
+			#password {
+				width: 100%;
+			}
+
+			#buttons {
+				margin-top: 6px;
+				@apply --layout-horizontal;
+			}
+
+			paper-button {
+				margin-left: 0;
+				margin-right: 13px;
+				height: 50px;
+				white-space: nowrap;
+				font-size: 16px;
+				@apply --layout-flex;
+			}
+
+			#connect {
+				--paper-button: {
+					background-color: #5BA664;
+					color: white;
+				};
+			}
+
+			#abort {
+				--paper-button: {
+					background-color: #FF7522;
+					color: white;
+				};
+			}
+
+			#disconnect {
+				--paper-button: {
+					background-color: #C9513E;
+					color: white;
+				};
+			}
+
+			#indicator {
+				position: relative;
+				width: 174px;
+				height: 52px;
+				background: url("img/indicator_bg.png");
+				@apply --layout-flex-none;
+			}
+
+			#indicator-status {
+				position: absolute;
+				top: 0;
+				left: 10px;
+				width: 107px;
+				height: 52px;
+				font-size: 20px;
+				font-weight: bold;
+				@apply --layout-horizontal;
+				@apply --layout-center-center;
+			}
+
+			#indicator-status-online {
+				color: #33FF00;
+			}
+
+			#indicator-status-offline {
+				color: #FF9393;
+			}
+
+			#indicator-status-connecting {
+				color: #FFEB00;
+				margin-left: -10px;
+			}
+
+			#indicator-status-connecting:after {
+				position: absolute;
+				overflow: hidden;
+				display: inline-block;
+				vertical-align: bottom;
+				animation: ellipsis steps(4,end) 900ms infinite;
+				content: "\2026"; /* ascii code for the ellipsis character */
+				width: 0;
+			}
+
+			#indicator-led {
+				position: absolute;
+				top: 17px;
+				right: 18px;
+			}
+
+			@keyframes ellipsis {
+				to {
+					width: 1em;
+				}
+			}
+		</style>
+
+		<div id="addressInputs">
+			<paper-input
+				id="ipAddress"
+				label="IP Address"
+				value="{{ipAddress}}"
+				disabled="[[disableControls]]"></paper-input>
+
+			<paper-input
+				id="port"
+				label="Port"
+				value="{{port}}"
+				disabled="[[disableControls]]"></paper-input>
+		</div>
+
+		<paper-input
+			id="password"
+			label="Password"
+			value="{{password}}"
+			type="password"
+			disabled="[[disableControls]]"></paper-input>
+
+		<div id="buttons">
+			<paper-button id="connect" raised on-tap="connect" disabled="[[_calcConnectDisabled(ipAddress, port)]]">
+				Connect To OBS
+			</paper-button>
+
+			<paper-button id="abort" raised hidden on-tap="disconnect">
+				Cancel
+			</paper-button>
+
+			<paper-button id="disconnect" raised hidden on-tap="disconnect">
+				Disconnect From OBS
+			</paper-button>
+
+			<div id="indicator">
+				<div id="indicator-status">
+					<div id="indicator-status-online">ONLINE</div>
+					<div id="indicator-status-offline">OFFLINE</div>
+					<div id="indicator-status-connecting">CONN</div>
+				</div>
+				<nodecg-widget-obs-led id="indicator-led"></nodecg-widget-obs-led>
+			</div>
+		</div>
+	</template>
+
+	<script src="nodecg-widget-obs-controls.js"></script>
+</dom-module>

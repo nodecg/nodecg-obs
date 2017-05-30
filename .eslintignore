@@ -1,0 +1,5 @@
+.nyc_output
+bower_components
+coverage
+node_modules
+/packages/nodecg-widget-obs/test/mock-nodecg.js

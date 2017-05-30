@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+	<title>nodecg-widget-obs test</title>
+
+	<link rel="import" href="../../paper-toast/paper-toast.html">
+	<script src="../../webcomponentsjs/webcomponents-loader.js"></script>
+	<script src="../../web-component-tester/browser.js"></script>
+	<script src="mock-nodecg.js"></script>
+	<script>
+		/* global MockNodeCG */
+		window.nodecg = new MockNodeCG();
+	</script>
+
+	<link rel="import" href="../nodecg-widget-obs.html">
+</head>
+<body>
+	<test-fixture id="nodecg-widget-obs">
+		<template>
+			<nodecg-widget-obs></nodecg-widget-obs>
+		</template>
+	</test-fixture>
+
+	<test-fixture id="nodecg-widget-obs-controls">
+		<template>
+			<nodecg-widget-obs-controls></nodecg-widget-obs-controls>
+		</template>
+	</test-fixture>
+
+	<!-- Normally I'd not inline this script, but it fails when I do that. -->
+	<!-- Guessing that's a bug in web-component-tester. -->
+	<script>
+		/* eslint-env mocha */
+		/* global fixture assert sinon */
+		const NAMESPACES = ['foo', 'bar', 'baz', 'qux', 'foobar'];
+
+		suite('nodecg-widget-obs', () => {
+			const namespaces = nodecg.Replicant('_obs:namespaces');
+			let widget;
+			let shadowRoot;
+			let toast;
+
+			setup(() => {
+				widget = fixture('nodecg-widget-obs');
+				shadowRoot = widget.shadowRoot;
+				toast = shadowRoot.getElementById('toast');
+				sinon.stub(toast, 'show');
+				namespaces.value = NAMESPACES.slice(0, 4);
+				namespaces.emit('change', namespaces.value);
+				Polymer.flush();
+			});
+
+			test('shows the right number of tabs', () => {
+				const tabElements = shadowRoot.querySelectorAll('paper-tab');
+
+				namespaces.value = NAMESPACES.slice(0, 1);
+				namespaces.emit('change', namespaces.value);
+				Polymer.flush();
+				assert.isTrue(shadowRoot.getElementById('tabs').hidden);
+
+				namespaces.value = NAMESPACES.slice(0, 2);
+				namespaces.emit('change', namespaces.value);
+				Polymer.flush();
+				assert.isFalse(shadowRoot.getElementById('tabs').hidden);
+				assert.isFalse(tabElements[0].hidden);
+				assert.isFalse(tabElements[1].hidden);
+				assert.isTrue(tabElements[2].hidden);
+				assert.isTrue(tabElements[3].hidden);
+
+				namespaces.value = NAMESPACES.slice(0, 3);
+				namespaces.emit('change', namespaces.value);
+				Polymer.flush();
+				assert.isFalse(shadowRoot.getElementById('tabs').hidden);
+				assert.isFalse(tabElements[0].hidden);
+				assert.isFalse(tabElements[1].hidden);
+				assert.isFalse(tabElements[2].hidden);
+				assert.isTrue(tabElements[3].hidden);
+
+				namespaces.value = NAMESPACES.slice(0, 4);
+				namespaces.emit('change', namespaces.value);
+				Polymer.flush();
+				assert.isFalse(shadowRoot.getElementById('tabs').hidden);
+				assert.isFalse(tabElements[0].hidden);
+				assert.isFalse(tabElements[1].hidden);
+				assert.isFalse(tabElements[2].hidden);
+				assert.isFalse(tabElements[3].hidden);
+			});
+
+			test('shows the correct LED color on the tab for every state', () => {
+				const ledElementss = shadowRoot.querySelectorAll('nodecg-widget-obs-led');
+				const controlElements = shadowRoot.querySelectorAll('nodecg-widget-obs-controls');
+
+				const statusColorPairs = [
+					{status: 'error', color: 'red'},
+					{status: 'disconnected', color: 'red'},
+					{status: 'connecting', color: 'yellow'},
+					{status: 'connected', color: 'green'}
+				];
+
+				controlElements.forEach((control, index) => {
+					const led = ledElementss[index];
+					statusColorPairs.forEach(({status, color}) => {
+						control._setStatus(status);
+						assert.equal(led.color, color);
+					});
+				});
+			});
+
+			test('toast - connection success', () => {
+				const controls = shadowRoot.querySelectorAll('nodecg-widget-obs-controls');
+				controls[0].dispatchEvent(new CustomEvent('connected', {bubbles: true, composed: true}));
+
+				assert.isTrue(toast.show.calledOnce);
+				assert.deepEqual(toast.show.firstCall.args, ['OBS #1: Connected!']);
+
+				toast.show.restore();
+			});
+
+			test('toast - connection failure', () => {
+				const controls = shadowRoot.querySelectorAll('nodecg-widget-obs-controls');
+				controls[0].dispatchEvent(new CustomEvent('connection-failure', {
+					detail: new Error('boom'),
+					bubbles: true,
+					composed: true
+				}));
+
+				assert.isTrue(toast.show.calledOnce);
+				assert.deepEqual(toast.show.firstCall.args, ['OBS #1: Failed to connect: boom']);
+
+				toast.show.reset();
+				controls[0].dispatchEvent(new CustomEvent('connection-failure', {
+					detail: 'kaboom',
+					bubbles: true,
+					composed: true
+				}));
+				assert.isTrue(toast.show.calledOnce);
+				assert.deepEqual(toast.show.firstCall.args, ['OBS #1: Failed to connect: kaboom']);
+
+				toast.show.restore();
+			});
+
+			test('toast - disconnected', () => {
+				const controls = shadowRoot.querySelectorAll('nodecg-widget-obs-controls');
+				controls[0].dispatchEvent(new CustomEvent('disconnected', {bubbles: true, composed: true}));
+
+				assert.isTrue(toast.show.calledOnce);
+				assert.deepEqual(toast.show.firstCall.args, ['OBS #1: Disconnected.']);
+
+				toast.show.restore();
+			});
+		});
+
+		suite('nodecg-widget-obs-controls', () => {
+			let controls;
+			let shadowRoot;
+			const websocketConfig = nodecg.Replicant('obs:websocket');
+
+			setup(() => {
+				controls = fixture('nodecg-widget-obs-controls');
+				controls.namespace = 'obs';
+				shadowRoot = controls.shadowRoot;
+			});
+
+			test('the abort and disconnect buttons start hidden', () => {
+				assert.isFalse(shadowRoot.getElementById('connect').hidden);
+				assert.isTrue(shadowRoot.getElementById('abort').hidden);
+				assert.isTrue(shadowRoot.getElementById('disconnect').hidden);
+			});
+
+			test('show the correct buttons and indicators when connected', () => {
+				websocketConfig.emit('change', {status: 'connected'});
+
+				assert.isTrue(shadowRoot.getElementById('connect').hidden);
+				assert.isTrue(shadowRoot.getElementById('abort').hidden);
+				assert.isFalse(shadowRoot.getElementById('disconnect').hidden);
+
+				assert.isTrue(shadowRoot.getElementById('indicator-status-offline').hidden);
+				assert.isTrue(shadowRoot.getElementById('indicator-status-connecting').hidden);
+				assert.isFalse(shadowRoot.getElementById('indicator-status-online').hidden);
+			});
+
+			test('show the correct buttons and indicators when connecting', () => {
+				websocketConfig.emit('change', {status: 'connecting'});
+
+				assert.isTrue(shadowRoot.getElementById('connect').hidden);
+				assert.isFalse(shadowRoot.getElementById('abort').hidden);
+				assert.isTrue(shadowRoot.getElementById('disconnect').hidden);
+
+				assert.isTrue(shadowRoot.getElementById('indicator-status-offline').hidden);
+				assert.isFalse(shadowRoot.getElementById('indicator-status-connecting').hidden);
+				assert.isTrue(shadowRoot.getElementById('indicator-status-online').hidden);
+			});
+
+			test('show the correct buttons and indicators when disconnected', () => {
+				websocketConfig.emit('change', {status: 'disconnected'});
+
+				assert.isFalse(shadowRoot.getElementById('connect').hidden);
+				assert.isTrue(shadowRoot.getElementById('abort').hidden);
+				assert.isTrue(shadowRoot.getElementById('disconnect').hidden);
+
+				assert.isFalse(shadowRoot.getElementById('indicator-status-offline').hidden);
+				assert.isTrue(shadowRoot.getElementById('indicator-status-connecting').hidden);
+				assert.isTrue(shadowRoot.getElementById('indicator-status-online').hidden);
+			});
+
+			test('show the correct buttons and indicators when errored', () => {
+				websocketConfig.emit('change', {status: 'error'});
+
+				assert.isFalse(shadowRoot.getElementById('connect').hidden);
+				assert.isTrue(shadowRoot.getElementById('abort').hidden);
+				assert.isTrue(shadowRoot.getElementById('disconnect').hidden);
+
+				assert.isFalse(shadowRoot.getElementById('indicator-status-offline').hidden);
+				assert.isTrue(shadowRoot.getElementById('indicator-status-connecting').hidden);
+				assert.isTrue(shadowRoot.getElementById('indicator-status-online').hidden);
+			});
+
+			test('removes the `change` handler from the previous Replicant when namespace is changed', () => {
+				const originalNamespace = controls.namespace;
+				const oldRep = controls.websocketReplicant;
+				const newRep = nodecg.Replicant('asdf:websocket');
+				assert.isTrue(oldRep.listeners('change').includes(controls._handleWebsocketReplicantChange));
+				controls.namespace = 'asdf';
+				assert.isFalse(oldRep.listeners('change').includes(controls._handleWebsocketReplicantChange));
+				assert.isTrue(newRep.listeners('change').includes(controls._handleWebsocketReplicantChange));
+				controls.namespace = originalNamespace;
+				assert.isTrue(oldRep.listeners('change').includes(controls._handleWebsocketReplicantChange));
+				assert.isFalse(newRep.listeners('change').includes(controls._handleWebsocketReplicantChange));
+			});
+
+			test('#connect', () => {
+				nodecg.sendMessage.resolves();
+				websocketConfig.emit('change', {
+					status: 'disconnected',
+					ip: 'localhost',
+					port: 4444,
+					password: 'foo'
+				});
+
+				controls.connect();
+
+				assert.isTrue(nodecg.sendMessage.calledOnce);
+				assert.equal(nodecg.sendMessage.firstCall.args[0], 'obs:connect');
+				assert.deepEqual(nodecg.sendMessage.firstCall.args[1], {
+					ip: 'localhost',
+					port: 4444,
+					password: 'foo'
+				});
+				assert.lengthOf(nodecg.sendMessage.firstCall.args, 2);
+
+				nodecg.sendMessage.reset();
+			});
+
+			test('#connect - connection-failure', done => {
+				controls.addEventListener('connection-failure', event => {
+					assert.equal(event.detail.message, 'boom');
+					done();
+				});
+
+				nodecg.sendMessage.rejects(new Error('boom'));
+				websocketConfig.emit('change', {
+					status: 'disconnected',
+					ip: 'localhost',
+					port: 4444,
+					password: 'foo'
+				});
+
+				controls.connect();
+
+				assert.isTrue(nodecg.sendMessage.calledOnce);
+				assert.equal(nodecg.sendMessage.firstCall.args[0], 'obs:connect');
+				assert.deepEqual(nodecg.sendMessage.firstCall.args[1], {
+					ip: 'localhost',
+					port: 4444,
+					password: 'foo'
+				});
+				assert.lengthOf(nodecg.sendMessage.firstCall.args, 2);
+
+				nodecg.sendMessage.reset();
+			});
+
+			test('#disconnect', () => {
+				controls.disconnect();
+				assert.isTrue(nodecg.sendMessage.calledOnce);
+				assert.deepEqual(nodecg.sendMessage.firstCall.args, ['obs:disconnect']);
+			});
+		});
+	</script>
+</body>
+</html>

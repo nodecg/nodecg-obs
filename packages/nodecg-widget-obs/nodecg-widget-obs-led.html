@@ -1,0 +1,46 @@
+<link rel="import" href="../polymer/polymer-element.html">
+
+<dom-module id="nodecg-widget-obs-led">
+	<template>
+		<style>
+			:host {
+				display: block;
+				width: 19px;
+				height: 19px;
+				border-radius: 19px;
+			}
+
+			:host([color="green"]) {
+				background: radial-gradient(
+					10.79px at 34.85% 33.33%,
+					#FFFFFF 0%,
+					#9FFF91 33.82%,
+					#18CC00 65.48%,
+					#2FE316 100%
+				)
+			}
+
+			:host([color="yellow"]) {
+				background: radial-gradient(
+					10.79px at 34.85% 33.33%,
+					#FFFFFF 0%,
+					#F6FF91 33.82%,
+					#CCCC00 65.48%,
+					#E3B216 100%
+				)
+			}
+
+			:host([color="red"]) {
+				background: radial-gradient(
+					10.79px at 34.85% 33.33%,
+					#FFFFFF 0%,
+					#FF9191 33.82%,
+					#CC0000 65.48%,
+					#E31616 100%
+				)
+			}
+		</style>
+	</template>
+
+	<script src="nodecg-widget-obs-led.js"></script>
+</dom-module>

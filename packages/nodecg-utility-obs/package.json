@@ -1,0 +1,41 @@
+{
+  "name": "nodecg-utility-obs",
+  "version": "1.0.0",
+  "description": "A NodeCG utility that exposes a set of Replicants, Messages, and other hooks for interacting with OBS via obs-websocket",
+  "main": "index.js",
+  "scripts": {
+    "test": "nyc ava"
+  },
+  "author": {
+    "name": "Alex Van Camp",
+    "email": "email@alexvan.camp",
+    "url": "https://alexvan.camp/",
+    "twitter": "vancamp"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "clone": "^2.1.1",
+    "obs-websocket-js": "^0.6.0"
+  },
+  "devDependencies": {
+    "ava": "^0.19.1",
+    "lerna": "^2.0.0-rc.5",
+    "mockery": "^2.0.0",
+    "nyc": "^10.3.2"
+  },
+  "keywords": [
+    "nodecg",
+    "utility",
+    "helper",
+    "obs",
+    "obs-websocket",
+    "obs-websocket-js"
+  ],
+  "files": [
+    "*.js",
+    "lib"
+  ],
+  "engines": {
+    "node": ">=7"
+  }
+}

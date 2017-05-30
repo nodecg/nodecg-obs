@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+	<title>nodecg-widget-obs demo</title>
+
+	<script src="../../webcomponentsjs/webcomponents-loader.js"></script>
+	<script src="../test/mock-nodecg.js"></script>
+	<script>
+		/* global MockNodeCG */
+		const NAMESPACES = ['foo', 'bar', 'baz', 'qux'];
+		const nodecg = new MockNodeCG();
+		window.nodecg = nodecg;
+		const namespaces = nodecg.Replicant('_obs:namespaces');
+		const connectionTimeouts = {};
+		const disconnectionTimeout = {};
+
+		nodecg.sendMessage = function (messageName, params) {
+			const namespace = messageName.split(':')[0];
+			const websocketRep = nodecg.Replicant(`${namespace}:websocket`);
+			clearTimeout(connectionTimeouts[namespace]);
+			clearTimeout(disconnectionTimeout[namespace]);
+
+			return new Promise((resolve, reject) => {
+				if (messageName === `${namespace}:connect`) {
+					websocketRep.value.ip = params.ip;
+					websocketRep.value.port = params.port;
+					websocketRep.value.password = params.password;
+					websocketRep.value.status = 'connecting';
+					websocketRep.emit('change', websocketRep.value);
+					connectionTimeouts[namespace] = setTimeout(() => {
+						if (params.ip === 'error') {
+							websocketRep.value.status = 'error';
+							websocketRep.emit('change', websocketRep.value);
+							reject(new Error('Connection refused'));
+							return;
+						}
+
+						websocketRep.value.status = 'connected';
+						websocketRep.emit('change', websocketRep.value);
+						resolve();
+					}, getRandomIntInclusive(500, 1500));
+				} else if (messageName === `${namespace}:disconnect`) {
+					disconnectionTimeout[namespace] = setTimeout(() => {
+						websocketRep.value.status = 'disconnected';
+						websocketRep.emit('change', websocketRep.value);
+						resolve();
+					}, getRandomIntInclusive(50, 150));
+				} else {
+					console.warn('Unknown message:', messageName);
+				}
+			});
+		};
+
+		window.addEventListener('WebComponentsReady', () => {
+			namespaces.value = NAMESPACES.slice(0);
+			namespaces.emit('change', namespaces.value);
+		});
+
+		function getRandomIntInclusive(min, max) {
+			min = Math.ceil(min);
+			max = Math.floor(max);
+			return Math.floor(Math.random() * (max - min + 1)) + min;
+		}
+	</script>
+
+	<link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+	<link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+	<link rel="import" href="../../paper-toast/paper-toast.html">
+	<link rel="import" href="../nodecg-widget-obs.html">
+
+	<custom-style>
+		<style is="custom-style" include="demo-pages-shared-styles">
+			demo-snippet {
+				--demo-snippet-demo: {
+					padding: 0;
+				}
+			}
+		</style>
+	</custom-style>
+</head>
+<body>
+	<div class="vertical-section-container centered">
+		<h3>Basic nodecg-widget-obs demo</h3>
+		<demo-snippet>
+			<template>
+				<nodecg-widget-obs></nodecg-widget-obs>
+			</template>
+		</demo-snippet>
+	</div>
+</body>
+</html>
