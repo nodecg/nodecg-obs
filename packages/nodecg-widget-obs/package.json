@@ -6,7 +6,8 @@
   "files": [
     "img/**/*",
     "nodecg-widget-*.html",
-    "nodecg-widget-*.js"
+    "nodecg-widget-*.js",
+    "bower.json"
   ],
   "directories": {
     "test": "test"
