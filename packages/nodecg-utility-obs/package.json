@@ -33,7 +33,8 @@
   ],
   "files": [
     "*.js",
-    "lib"
+    "lib",
+    "schemas/**/*.json"
   ],
   "engines": {
     "node": ">=7"
