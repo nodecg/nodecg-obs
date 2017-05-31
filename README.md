@@ -23,13 +23,9 @@ Due to limitations of Bower, you'll need to install [`bower-npm-resolver`](https
     cd nodecg/bundles/my-bundle
     npm install --save nodecg-utility-obs bower-npm-resolver
     ```
-2. Add `bower-npm-resolver` to your bundle's `bower.json`:
+2. Add `bower-npm-resolver` to a `.bowerrc` file in the root of your bundle (create it if it does not exist):
     ```json
     {
-       "name": "my-bundle",
-       "dependencies": {
-            "your-dependencies": "will-be-listed-here"
-       },
        "resolvers": [
            "bower-npm-resolver"
        ]
