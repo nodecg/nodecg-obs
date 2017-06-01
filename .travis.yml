@@ -1,7 +1,6 @@
 sudo: required
 language: node_js
-node_js:
-- v8
+node_js: '7'
 cache:
   apt: true
   directories:
