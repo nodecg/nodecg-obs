@@ -20,6 +20,7 @@
   "devDependencies": {
     "ava": "^0.19.1",
     "lerna": "^2.0.0-rc.5",
+    "mock-nodecg": "^1.0.1",
     "mockery": "^2.0.0",
     "nyc": "^10.3.2"
   },

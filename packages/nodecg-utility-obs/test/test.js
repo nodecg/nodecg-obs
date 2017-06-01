@@ -6,8 +6,8 @@ const sinon = require('sinon');
 const test = require('ava');
 
 // Mocks
-const MockNodeCG = require('../../../mocks/mock-nodecg');
-const MockOBSWebsocketJS = require('../../../mocks/mock-obs-websocket-js');
+const MockNodeCG = require('mock-nodecg');
+const MockOBSWebsocketJS = require('./helpers/mocks/mock-obs-websocket-js');
 
 mockery.registerMock('obs-websocket-js', MockOBSWebsocketJS);
 mockery.enable({warnOnUnregistered: false});

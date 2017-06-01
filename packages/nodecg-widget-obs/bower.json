@@ -1,51 +1,52 @@
 {
-	"name": "nodecg-widget-obs",
-	"authors": [
-		"Alex Van Camp <vancamp.alex@gmail.com>"
-	],
-	"description": "A NodeCG utility that provides a UI for configuring a connection to OBS via obs-websocket",
-	"main": "nodecg-widget-obs.html",
-	"keywords": [
-		"nodecg",
-		"utility",
-		"ui",
-		"obs",
-		"helper",
-		"obs-websocket",
-		"obs-websocket-js",
-		"polymer",
-		"web-components",
-		"web-component"
-	],
-	"license": "MIT",
-	"homepage": "",
-	"ignore": [
-		"**/.*",
-		"node_modules",
-		"bower_components",
-		"test",
-		"tests",
-		"wct.conf.json"
-	],
-	"dependencies": {
-		"polymer": "Polymer/polymer#^2.0.0",
-		"iron-flex-layout": "PolymerElements/iron-flex-layout#^2.0.0",
-		"paper-button": "PolymerElements/paper-button#^2.0.0",
-		"paper-input": "PolymerElements/paper-input#^2.0.0",
-		"nodecg-toast": "NodeCGElements/nodecg-toast#^1.0.0",
-		"paper-tabs": "PolymerElements/paper-tabs#^2.0.0",
-		"iron-pages": "PolymerElements/iron-pages#^2.0.0"
-	},
-	"devDependencies": {
-		"iron-demo-helpers": "PolymerElements/iron-demo-helpers#^2.0.0",
-		"test-fixture": "PolymerElements/test-fixture#3.0.0-rc.1",
-		"web-component-tester": "Lange/web-component-tester#patch-1",
-		"webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0",
-		"paper-toast": "PolymerElements/paper-toast#^2.0.0"
-	},
-	"resolutions": {
-		"polymer": "^2.0.0",
-		"webcomponentsjs": "^1.0.0",
-		"paper-toast": "^2.0.0"
-	}
+  "name": "nodecg-widget-obs",
+  "authors": [
+    "Alex Van Camp <vancamp.alex@gmail.com>"
+  ],
+  "description": "A NodeCG utility that provides a UI for configuring a connection to OBS via obs-websocket",
+  "main": "nodecg-widget-obs.html",
+  "keywords": [
+    "nodecg",
+    "utility",
+    "ui",
+    "obs",
+    "helper",
+    "obs-websocket",
+    "obs-websocket-js",
+    "polymer",
+    "web-components",
+    "web-component"
+  ],
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "wct.conf.json"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^2.0.0",
+    "iron-flex-layout": "PolymerElements/iron-flex-layout#^2.0.0",
+    "paper-button": "PolymerElements/paper-button#^2.0.0",
+    "paper-input": "PolymerElements/paper-input#^2.0.0",
+    "nodecg-toast": "NodeCGElements/nodecg-toast#^1.0.0",
+    "paper-tabs": "PolymerElements/paper-tabs#^2.0.0",
+    "iron-pages": "PolymerElements/iron-pages#^2.0.0"
+  },
+  "devDependencies": {
+    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^2.0.0",
+    "test-fixture": "PolymerElements/test-fixture#3.0.0-rc.1",
+    "web-component-tester": "Lange/web-component-tester#patch-1",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0",
+    "paper-toast": "PolymerElements/paper-toast#^2.0.0",
+    "mock-nodecg": "nodecg/mock-nodecg#^1.0.1"
+  },
+  "resolutions": {
+    "polymer": "^2.0.0",
+    "webcomponentsjs": "^1.0.0",
+    "paper-toast": "^2.0.0"
+  }
 }

@@ -109,7 +109,7 @@ And that's it! You now have access to all of the Replicants and Messages in your
 
 ### Planned Features
 
-* More pre- and post-event hooks can be added! Feel free to open an [issue](https://github.com/nodecg/nodecg-obs/issues)  or a [pull request](https://github.com/nodecg/nodecg-obs/pulls).
+* More pre- and post-event hooks can be added! Feel free to open an [issue](https://github.com/nodecg/nodecg-obs/issues) or a [pull request](https://github.com/nodecg/nodecg-obs/pulls).
 
 ### Contributing
 
