@@ -96,6 +96,8 @@ Then, in one of your bundle's panels (for example: `nodecg/bundles/dashboard/my-
 </html>
 ```
 
+The recommended panel `width` (in your `package.json`'s `nodecg` stanza) is `3`.
+
 And that's it! You now have access to all of the Replicants and Messages in your code, and an interface for establishing a connection to OBS. You may begin creating interactions and integrations with OBS in your bundle.
 
 ### Features
