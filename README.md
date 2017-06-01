@@ -1,5 +1,7 @@
 # nodecg-obs [![license](https://img.shields.io/npm/l/nodecg-utility-obs.svg)](https://npm.im/nodecg-utility-obs) [![Build Status](https://travis-ci.org/nodecg/nodecg-obs.svg?branch=master)](https://travis-ci.org/nodecg/nodecg-obs) [![Coverage Status](https://coveralls.io/repos/github/nodecg/nodecg-obs/badge.svg?branch=master)](https://coveralls.io/github/nodecg/nodecg-obs?branch=master) [![Join the chat at https://gitter.im/nodecg/nodecg](https://badges.gitter.im/nodecg/nodecg.svg)](https://gitter.im/nodecg/nodecg?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
+![screenshot](media/widget-screenshot.png)
+
 [`nodecg-obs`](https://github.com/NodeCG/nodecg-obs) adds the ability to connect to 1-4 instances of OBS (via [`obs-websocket`](https://github.com/Palakis/obs-websocket)) to your NodeCG bundle. It has two parts:
 - The backend: [`nodecg-utility-obs`](packages/nodecg-utility-obs), an npm package
     - This is server-side code that runs in Node.js.
