@@ -37,6 +37,9 @@
 			super.ready();
 			namespaces.on('change', newVal => {
 				this.namespaces = newVal.slice(0);
+				if (this.selected < 0) {
+					this.selected = 0;
+				}
 			});
 		}
 
