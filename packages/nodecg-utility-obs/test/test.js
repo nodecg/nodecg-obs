@@ -373,6 +373,16 @@ test('#_updatePreviewScene', async t => {
 	t.deepEqual(t.context.obs.log.error.firstCall.args[1].message, 'boom');
 });
 
+test('#_updatePreviewScene sets previewScene replicant to null when not in studio mode', async t => {
+	// Tell our #setPreviewScene stub to return a promise that rejects.
+	t.context.obs.getPreviewScene.rejects({error: 'studio mode not enabled'});
+
+	await t.context.obs._updatePreviewScene();
+
+	t.true(t.context.obs.getPreviewScene.calledOnce);
+	t.is(t.context.obs.replicants.previewScene.value, null);
+});
+
 test('#_transition throws when not connected to OBS', t => { // eslint-disable-line ava/prefer-async-await
 	t.plan(1);
 

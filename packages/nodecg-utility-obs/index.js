@@ -227,6 +227,11 @@ class OBSUtility extends OBSWebSocket {
 				sources: res.sources
 			};
 		}).catch(err => {
+			if (err.error === 'studio mode not enabled') {
+				this.replicants.previewScene.value = null;
+				return;
+			}
+
 			this.log.error('Error updating preview scene:', err);
 		});
 	}

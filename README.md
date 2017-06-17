@@ -231,6 +231,8 @@ previewScene.on('change', newVal => {
 
 If OBS is in "Studio" mode, this Replicant's `value` will be the current scene that is in Preview.
 
+If OBS is **not** in "Studio" mode, this Replicant's `value` will be `null`.
+
 Relevant Schemas:
  - [`previewScene.json`](packages/nodecg-utility-obs/schemas/previewScene.json)
  - [`types/obs_scene.json`](packages/nodecg-utility-obs/schemas/types/obs_scene.json)
