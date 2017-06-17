@@ -14,6 +14,10 @@ You can think of `nodecg-obs` sort of like a set of mixins for your NodeCG bundl
 
 Internally, `nodecg-obs` uses [`obs-websocket-js`](https://github.com/haganbmj/obs-websocket-js) to communicate with `obs-websocket`.
 
+## Requirements
+- NodeCG v0.9 (currently in beta, checkout the latest commit from the [0.9-dev branch](https://github.com/nodecg/nodecg/tree/0.9-dev))
+- [Node.js v7 or greater](https://nodejs.org/)
+
 ## Install
 
 `nodecg-utility-obs` and `nodecg-widget-obs` should be installed as dependencies of your bundle.
