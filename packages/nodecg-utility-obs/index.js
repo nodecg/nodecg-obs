@@ -145,7 +145,9 @@ class OBSUtility extends OBSWebSocket {
 		});
 
 		this.on('TransitionBegin', () => {
-			nodecg.sendMessage(`${namespace}:transitioning`, {sceneName: previewScene.value.name});
+			nodecg.sendMessage(`${namespace}:transitioning`, {
+				sceneName: previewScene.value ? previewScene.value.name : undefined
+			});
 			transitioning.value = true;
 		});
 	}

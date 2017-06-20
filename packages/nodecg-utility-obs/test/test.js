@@ -275,6 +275,19 @@ test('on TransitionBegin', t => {
 	]);
 });
 
+test('on TransitionBegin when not in Studio mode', t => {
+	t.context.obs.replicants.previewScene.value = null;
+
+	t.context.obs.emit('TransitionBegin');
+
+	t.is(t.context.obs.replicants.transitioning.value, true);
+	t.true(t.context.nodecg.sendMessage.calledOnce);
+	t.deepEqual(t.context.nodecg.sendMessage.firstCall.args, [
+		'obs:transitioning',
+		{sceneName: undefined}
+	]);
+});
+
 test('#_connectToOBS', async t => {
 	sinon.stub(t.context.obs, '_fullUpdate').resolves();
 
