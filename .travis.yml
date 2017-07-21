@@ -1,6 +1,6 @@
 sudo: required
 language: node_js
-node_js: '7'
+node_js: '8'
 cache:
   apt: true
   directories:
@@ -18,7 +18,7 @@ addons:
       - google-chrome-stable
 before_install:
   - npm install -g bower
-  - npm install -g lerna@2.0.0-rc.5
+  - npm install -g lerna@^2
   - lerna bootstrap
 script:
   # Run our tests with virtual X frame buffer, needed for the selenium browser tests
