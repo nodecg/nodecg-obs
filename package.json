@@ -23,7 +23,7 @@
     "move-reports": "copyfiles -f packages/*/{coverage,.nyc_output}/*.json .nyc_output",
     "report": "npm run move-reports && nyc report --reporter=html --reporter=text",
     "coverage": "npm run move-reports && nyc report --reporter=text-lcov | coveralls",
-    "pretest": "eslint *.js packakges/**/*.js packages/**/*.html",
+    "pretest": "eslint *.js packages/**/*.js packages/**/*.html",
     "test": "lerna run test",
     "postinstall": "lerna bootstrap",
     "update-coc": "weallbehave -o . && git add CODE_OF_CONDUCT.md && git commit -m 'docs(coc): updated CODE_OF_CONDUCT.md'",
