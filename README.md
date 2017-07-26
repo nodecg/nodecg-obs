@@ -111,7 +111,7 @@ And that's it! You now have access to all of the Replicants and Messages in your
 * Replicants that update in real-time to reflect the current state of OBS, accessible from both the backend (extensions) and frontend (dashboard panels & graphics).
 * Pre- and post-event hooks for extending `OBSUtility` with your own custom behaviors.
 * Full access to the [`obs-websocket-js`](https://github.com/haganbmj/obs-websocket-js) API. `OBSUtility` inherits fully from the `obs-websocket-js` class.
-* Uses NodeCG's built-in logging system (which means it can also report errors to [Rollbar](https://rollbar.com/)).
+* Uses NodeCG's built-in logging system (which means it can also report errors to [Sentry](https://getsentry.com/)).
 
 ### Planned Features
 
