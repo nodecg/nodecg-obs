@@ -190,7 +190,7 @@ class OBSUtility extends OBSWebSocket {
 	}
 
 	/**
-	 * Updates the sceneList replication with the current value from this.
+	 * Updates the sceneList replicant with the current value from OBS.
 	 * By extension, it also updates the customSceneList replicant.
 	 * @returns {Promise}
 	 */
@@ -204,7 +204,7 @@ class OBSUtility extends OBSWebSocket {
 	}
 
 	/**
-	 * Updates the programScene replicant with the current value from this.
+	 * Updates the programScene replicant with the current value from OBS.
 	 * @returns {Promise}
 	 */
 	_updateProgramScene() {
@@ -220,7 +220,7 @@ class OBSUtility extends OBSWebSocket {
 	}
 
 	/**
-	 * Updates the previewScene replicant with the current value from this.
+	 * Updates the previewScene replicant with the current value from OBS.
 	 */
 	_updatePreviewScene() {
 		return this.getPreviewScene().then(res => {
