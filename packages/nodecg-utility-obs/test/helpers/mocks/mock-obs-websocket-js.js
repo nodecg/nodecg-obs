@@ -25,6 +25,7 @@ class MockOBSWebsocketJS extends EventEmitter {
 		this.getSceneList = sinon.stub().resolves({scenes: [clone(SCENE_STUB)]});
 		this.getCurrentScene = sinon.stub().resolves(clone(SCENE_STUB));
 		this.getPreviewScene = sinon.stub().resolves(clone(SCENE_STUB));
+		this.getStudioModeStatus = sinon.stub().resolves({studioMode: true});
 	}
 }
 

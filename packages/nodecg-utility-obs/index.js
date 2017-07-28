@@ -36,6 +36,7 @@ class OBSUtility extends OBSWebSocket {
 		const previewScene = nodecg.Replicant(`${namespace}:previewScene`, {schemaPath: buildSchemaPath('previewScene')});
 		const sceneList = nodecg.Replicant(`${namespace}:sceneList`, {schemaPath: buildSchemaPath('sceneList')});
 		const transitioning = nodecg.Replicant(`${namespace}:transitioning`, {schemaPath: buildSchemaPath('transitioning')});
+		const studioMode = nodecg.Replicant(`${namespace}:studioMode`, {schemaPath: buildSchemaPath('studioMode')});
 		const log = new nodecg.Logger(`${nodecg.bundleName}:${namespace}`);
 
 		// Expose convenient references to the Replicants.
@@ -47,7 +48,8 @@ class OBSUtility extends OBSWebSocket {
 			programScene,
 			previewScene,
 			sceneList,
-			transitioning
+			transitioning,
+			studioMode
 		};
 		this.log = log;
 		this.hooks = opts.hooks || {};
@@ -150,6 +152,10 @@ class OBSUtility extends OBSWebSocket {
 			});
 			transitioning.value = true;
 		});
+
+		this.on('StudioModeSwitched', data => {
+			studioMode.value = data.newState;
+		});
 	}
 
 	/**
@@ -185,7 +191,8 @@ class OBSUtility extends OBSWebSocket {
 		return Promise.all([
 			this._updateScenesList(),
 			this._updateProgramScene(),
-			this._updatePreviewScene()
+			this._updatePreviewScene(),
+			this._updateStudioMode()
 		]);
 	}
 
@@ -235,6 +242,19 @@ class OBSUtility extends OBSWebSocket {
 			}
 
 			this.log.error('Error updating preview scene:', err);
+		});
+	}
+
+	/**
+	 * Updates the studioMode replicant with the current value from OBS.
+	 * @returns {Promise.<T>|*}
+	 * @private
+	 */
+	_updateStudioMode() {
+		return this.getStudioModeStatus().then(res => {
+			this.replicants.studioMode.value = res.studioMode;
+		}).catch(err => {
+			this.log.error('Error getting studio mode status:', err);
 		});
 	}
 

@@ -276,16 +276,16 @@ test('on TransitionBegin', t => {
 });
 
 test('on TransitionBegin when not in Studio mode', t => {
-	t.context.obs.replicants.previewScene.value = null;
+	sinon.stub(t.context.obs, '_updateScenesList');
+	t.context.obs.emit('ScenesChanged');
+	t.true(t.context.obs._updateScenesList.calledOnce);
+});
 
-	t.context.obs.emit('TransitionBegin');
-
-	t.is(t.context.obs.replicants.transitioning.value, true);
-	t.true(t.context.nodecg.sendMessage.calledOnce);
-	t.deepEqual(t.context.nodecg.sendMessage.firstCall.args, [
-		'obs:transitioning',
-		{sceneName: undefined}
-	]);
+test('on StudioModeSwitched', t => {
+	t.context.obs.emit('StudioModeSwitched', {newState: false});
+	t.is(t.context.obs.replicants.studioMode.value, false);
+	t.context.obs.emit('StudioModeSwitched', {newState: true});
+	t.is(t.context.obs.replicants.studioMode.value, true);
 });
 
 test('#_connectToOBS', async t => {
@@ -394,6 +394,21 @@ test('#_updatePreviewScene sets previewScene replicant to null when not in studi
 
 	t.true(t.context.obs.getPreviewScene.calledOnce);
 	t.is(t.context.obs.replicants.previewScene.value, null);
+});
+
+test('#_updateStudioMode', async t => {
+	await t.context.obs._updateStudioMode();
+	t.true(t.context.obs.getStudioModeStatus.calledOnce);
+	t.deepEqual(t.context.obs.replicants.studioMode.value, true);
+
+	t.context.obs.getStudioModeStatus.reset();
+	t.context.obs.getStudioModeStatus.rejects(new Error('boom'));
+
+	await t.context.obs._updateStudioMode();
+	t.true(t.context.obs.getStudioModeStatus.calledOnce);
+	t.true(t.context.obs.log.error.calledOnce);
+	t.deepEqual(t.context.obs.log.error.firstCall.args[0], 'Error getting studio mode status:');
+	t.deepEqual(t.context.obs.log.error.firstCall.args[1].message, 'boom');
 });
 
 test('#_transition throws when not connected to OBS', t => { // eslint-disable-line ava/prefer-async-await

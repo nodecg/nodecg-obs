@@ -57,6 +57,7 @@ Due to limitations of Bower, you'll need to install [`bower-npm-resolver`](https
   * [`obs:websocket`](#websocket)
   * [`obs:sceneList`](#sceneList)
   * [`obs:transitioning`](#transitioning)
+  * [`obs:studioMode`](#studioMode)
   * [`_obs:namespaces`](#namespaces)
 * [Messages Sent](#messages-sent)
   * [`obs:transitioning`](#message-transitioning)
@@ -216,6 +217,7 @@ module.exports = function (nodecg) {
     obs.replicants.previewScene.on('change', () => {/* ... */});
     obs.replicants.sceneList.on('change', () => {/* ... */});
     obs.replicants.transitioning.on('change', () => {/* ... */});
+    obs.replicants.studioMode.on('change', () => {/* ... */});
 };
 ```
 
@@ -265,6 +267,13 @@ A boolean that becomes `true` when a transition is in progress and `false` when 
  
 Relevant Schemas:
  - [`transitioning.json`](packages/nodecg-utility-obs/schemas/transitioning.json)
+ 
+#### <a name="studioMode"></a> `> nodecg.Replicant('obs:studioMode')`
+ 
+A boolean that becomes `true` when OBS is in Studio Mode `false` when OBS isn't in Studio Mode.
+ 
+Relevant Schemas:
+ - [`studioMode.json`](packages/nodecg-utility-obs/schemas/studioMode.json)
  
 #### <a name="namespaces"></a> `> nodecg.Replicant('_obs:namespaces')`
  
