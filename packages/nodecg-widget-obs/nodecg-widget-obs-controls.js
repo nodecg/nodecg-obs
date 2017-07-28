@@ -95,9 +95,6 @@ class NodecgWidgetObsControls extends Polymer.Element {
 				break;
 			case 'disconnected':
 			case 'error':
-				if (oldStatus) {
-
-				}
 				this.$['indicator-led'].color = 'red';
 				break;
 			/* istanbul ignore next */
