@@ -9,7 +9,7 @@
     "eslint-plugin-html": "^3.1.0",
     "lerna": "^2.0.0",
     "nyc": "^11.0.3",
-    "sinon": "^2.3.1",
+    "sinon": "^3.0.0",
     "weallbehave": "^1.2.0",
     "weallcontribute": "^1.0.8"
   },
