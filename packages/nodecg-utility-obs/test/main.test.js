@@ -215,6 +215,31 @@ test('reconnection', t => {
 	t.true(t.context.obs._connectToOBS.calledOnce);
 });
 
+test.cb('detects when websocketConfig.status disagrees with _connected', t => {
+	// We can't use fake timers in this test because the interval
+	// was created before this test started.
+
+	t.plan(3);
+	sinon.stub(t.context.obs, '_reconnectToOBS');
+
+	t.context.obs.replicants.websocket.value.status = 'connected';
+	t.context.obs._connected = false;
+
+	setTimeout(() => {
+		try {
+			t.true(t.context.obs._reconnectToOBS.calledOnce);
+			t.true(t.context.obs.log.warn.calledOnce);
+			t.deepEqual(t.context.obs.log.warn.firstCall.args, [
+				'Thought we were connected, but the automatic poll detected we were not. Correcting.'
+			]);
+		} catch (e) {
+			t.fail(e);
+		}
+
+		t.end();
+	}, 1000);
+});
+
 test.cb('doesn\'t attempt to reconnect if the disconnect was intentional', t => {
 	t.plan(1);
 	t.context.nodecg.emit('obs:disconnect');

@@ -30,7 +30,7 @@ class OBSUtility extends OBSWebSocket {
 		});
 		namespacesReplicant.value.push(namespace);
 
-		let ignoreConnectionClosedEvents = false;
+		this._ignoreConnectionClosedEvents = false;
 		const websocketConfig = nodecg.Replicant(`${namespace}:websocket`, {schemaPath: buildSchemaPath('websocket')});
 		const programScene = nodecg.Replicant(`${namespace}:programScene`, {schemaPath: buildSchemaPath('programScene')});
 		const previewScene = nodecg.Replicant(`${namespace}:previewScene`, {schemaPath: buildSchemaPath('previewScene')});
@@ -66,7 +66,7 @@ class OBSUtility extends OBSWebSocket {
 		});
 
 		nodecg.listenFor(`${namespace}:connect`, (params, cb) => {
-			ignoreConnectionClosedEvents = false;
+			this._ignoreConnectionClosedEvents = false;
 			clearInterval(this._reconnectInterval);
 			websocketConfig.value.ip = params.ip;
 			websocketConfig.value.port = params.port;
@@ -91,7 +91,7 @@ class OBSUtility extends OBSWebSocket {
 		});
 
 		nodecg.listenFor(`${namespace}:disconnect`, () => {
-			ignoreConnectionClosedEvents = true;
+			this._ignoreConnectionClosedEvents = true;
 			clearInterval(this._reconnectInterval);
 			websocketConfig.value.status = 'disconnected';
 			this.disconnect();
@@ -113,20 +113,7 @@ class OBSUtility extends OBSWebSocket {
 		});
 
 		this.on('ConnectionClosed', () => {
-			if (this._reconnectInterval) {
-				return;
-			}
-
-			if (ignoreConnectionClosedEvents) {
-				websocketConfig.value.status = 'disconnected';
-				return;
-			}
-
-			websocketConfig.value.status = 'connecting';
-			log.warn('Connection closed, will attempt to reconnect every 5 seconds.');
-			this._reconnectInterval = setInterval(() => {
-				this._connectToOBS().catch(/* istanbul ignore next */() => {}); // Intentionally discard error messages -- bit dangerous.
-			}, 5000);
+			this._reconnectToOBS();
 		});
 
 		this.on('SwitchScenes', () => {
@@ -156,6 +143,13 @@ class OBSUtility extends OBSWebSocket {
 		this.on('StudioModeSwitched', data => {
 			studioMode.value = data.newState;
 		});
+
+		setInterval(() => {
+			if (websocketConfig.value && websocketConfig.value.status === 'connected' && !this._connected) {
+				log.warn('Thought we were connected, but the automatic poll detected we were not. Correcting.');
+				this._reconnectToOBS();
+			}
+		}, 1000);
 	}
 
 	/**
@@ -180,6 +174,28 @@ class OBSUtility extends OBSWebSocket {
 			websocketConfig.value.status = 'connected';
 			return this._fullUpdate();
 		});
+	}
+
+	/**
+	 * Attempt to reconnect to OBS, and keep re-trying every 5s until successful.
+	 * @private
+	 */
+	_reconnectToOBS() {
+		if (this._reconnectInterval) {
+			return;
+		}
+
+		const websocketConfig = this.replicants.websocket;
+		if (this._ignoreConnectionClosedEvents) {
+			websocketConfig.value.status = 'disconnected';
+			return;
+		}
+
+		websocketConfig.value.status = 'connecting';
+		this.log.warn('Connection closed, will attempt to reconnect every 5 seconds.');
+		this._reconnectInterval = setInterval(() => {
+			this._connectToOBS().catch(/* istanbul ignore next */() => {}); // Intentionally discard error messages -- bit dangerous.
+		}, 5000);
 	}
 
 	/**
