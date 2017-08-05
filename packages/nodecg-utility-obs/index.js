@@ -68,6 +68,7 @@ class OBSUtility extends OBSWebSocket {
 		nodecg.listenFor(`${namespace}:connect`, (params, cb) => {
 			this._ignoreConnectionClosedEvents = false;
 			clearInterval(this._reconnectInterval);
+			this._reconnectInterval = null;
 			websocketConfig.value.ip = params.ip;
 			websocketConfig.value.port = params.port;
 			websocketConfig.value.password = params.password;
@@ -93,6 +94,7 @@ class OBSUtility extends OBSWebSocket {
 		nodecg.listenFor(`${namespace}:disconnect`, () => {
 			this._ignoreConnectionClosedEvents = true;
 			clearInterval(this._reconnectInterval);
+			this._reconnectInterval = null;
 			websocketConfig.value.status = 'disconnected';
 			this.disconnect();
 			log.info('Operator-requested disconnect.');
@@ -148,6 +150,7 @@ class OBSUtility extends OBSWebSocket {
 			if (websocketConfig.value && websocketConfig.value.status === 'connected' && !this._connected) {
 				log.warn('Thought we were connected, but the automatic poll detected we were not. Correcting.');
 				clearInterval(this._reconnectInterval);
+				this._reconnectInterval = null;
 				this._reconnectToOBS();
 			}
 		}, 1000);
@@ -172,6 +175,7 @@ class OBSUtility extends OBSWebSocket {
 		}).then(() => {
 			this.log.info('Connected.');
 			clearInterval(this._reconnectInterval);
+			this._reconnectInterval = null;
 			websocketConfig.value.status = 'connected';
 			return this._fullUpdate();
 		});
