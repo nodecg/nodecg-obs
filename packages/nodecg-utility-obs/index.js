@@ -147,6 +147,7 @@ class OBSUtility extends OBSWebSocket {
 		setInterval(() => {
 			if (websocketConfig.value && websocketConfig.value.status === 'connected' && !this._connected) {
 				log.warn('Thought we were connected, but the automatic poll detected we were not. Correcting.');
+				clearInterval(this._reconnectInterval);
 				this._reconnectToOBS();
 			}
 		}, 1000);
