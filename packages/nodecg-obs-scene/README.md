@@ -7,6 +7,7 @@ For documentation on how to set up and use `nodecg-utility-obs` and `nodecg-widg
 ## Requirements
 
 - NodeCG v0.9 (currently in beta, checkout the latest commit from the [0.9-dev branch](https://github.com/nodecg/nodecg/tree/0.9-dev))
+- `nodecg-utility-obs` and `nodecg-widget-obs` will also need to be added to your bundle. See the main [`nodecg-obs`](https://github.com/NodeCG/nodecg-obs) documentation for instructions on how to do that. 
 
 ## Install
 
