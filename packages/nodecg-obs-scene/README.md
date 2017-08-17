@@ -41,6 +41,7 @@ Due to limitations of Bower, you'll need to install [`bower-npm-resolver`](https
 * [Features](#features)
 * [Planned Features](#planned-features)
 * [Events](#events)
+* [Caveats](#caveats)
 
 ## Example
 
@@ -110,3 +111,8 @@ sceneElement.addEventListener('state-changed', e => {
 	console.log(e.detail.value); // Will be one of "program", "preview", or "none".
 });
 ```
+
+## Caveats
+
+- If a scene is in both Preview and Program, `nodecg-obs-scene` will always report it as being in Program.
+- You may need to call `.refresh(true)` on your instance of `nodecg-obs-scene` on initial page load, because the first state change event may happen before the rest of your code is ready.
