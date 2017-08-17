@@ -7,6 +7,8 @@
     - This is server-side code that runs in Node.js.
 - The frontend: [`nodecg-widget-obs`](packages/nodecg-widget-obs), a [Polymer](https://www.polymer-project.org/) element
     - This is client-side code that runs in your browser.
+    
+In addition, there's a supplementary [Polymer](https://www.polymer-project.org/) element called [`nodecg-obs-scene`](packages/nodecg-obs-scene) that provides realtime data bindings with information about a given scene in OBS.
 
 Once your bundle has connected to OBS, you'll have access to a set of Replicants and Messages that you can use to both control OBS and react to events originating from OBS. For example, you could have code that changes based on what scene is active, or implement a "Transition" button that uses a different transition depending on what scene is being transitioned to. There's a lot of possibilities!
 
@@ -15,6 +17,7 @@ You can think of `nodecg-obs` sort of like a set of mixins for your NodeCG bundl
 Internally, `nodecg-obs` uses [`obs-websocket-js`](https://github.com/haganbmj/obs-websocket-js) to communicate with `obs-websocket`.
 
 ## Requirements
+
 - NodeCG v0.9 (currently in beta, checkout the latest commit from the [0.9-dev branch](https://github.com/nodecg/nodecg/tree/0.9-dev))
 - [Node.js v7 or greater](https://nodejs.org/)
 

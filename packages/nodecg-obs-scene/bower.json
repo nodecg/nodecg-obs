@@ -1,0 +1,44 @@
+{
+  "name": "nodecg-obs-scene",
+  "authors": [
+    "Alex Van Camp <vancamp.alex@gmail.com>"
+  ],
+  "description": "A NodeCG utility that provides a UI for configuring a connection to OBS via obs-websocket",
+  "main": "nodecg-obs-scene.html",
+  "keywords": [
+    "nodecg",
+    "utility",
+    "ui",
+    "obs",
+    "helper",
+    "obs-websocket",
+    "obs-websocket-js",
+    "polymer",
+    "web-components",
+    "web-component"
+  ],
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "wct.conf.json"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^2.0.0"
+  },
+  "devDependencies": {
+    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^2.0.0",
+    "test-fixture": "PolymerElements/test-fixture#3.0.0-rc.1",
+    "web-component-tester": "Lange/web-component-tester#patch-1",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0",
+    "mock-nodecg": "nodecg/mock-nodecg#^1.3.0"
+  },
+  "resolutions": {
+    "polymer": "^2.0.0",
+    "webcomponentsjs": "^1.0.0"
+  }
+}

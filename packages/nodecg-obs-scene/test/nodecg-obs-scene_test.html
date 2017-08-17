@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+	<title>nodecg-obs-scene test</title>
+
+	<script src="../../webcomponentsjs/webcomponents-loader.js"></script>
+	<script src="../../mock-nodecg/dist/mock-nodecg.js"></script>
+	<script src="../../web-component-tester/browser.js"></script>
+
+	<link rel="import" href="../../polymer/lib/utils/flush.html">
+	<link rel="import" href="../nodecg-obs-scene.html">
+</head>
+<body>
+	<test-fixture id="nodecg-obs-scene">
+		<template>
+			<nodecg-obs-scene scene-name="fooScene"></nodecg-obs-scene>
+		</template>
+	</test-fixture>
+
+	<!-- Normally I'd not inline this script, but it fails when I do that. -->
+	<!-- Guessing that's a bug in web-component-tester. -->
+	<script>
+		/* eslint-env mocha */
+		/* global fixture assert MockNodeCG */
+		suite('nodecg-obs-scene', () => {
+			let previewRep;
+			let programRep;
+			let sceneEl;
+
+			setup(() => {
+				window.nodecg = new MockNodeCG();
+				previewRep = nodecg.Replicant('obs:previewScene');
+				programRep = nodecg.Replicant('obs:programScene');
+				sceneEl = fixture('nodecg-obs-scene');
+				Polymer.flush();
+			});
+
+			test('#refresh throws an error when forceFire isn\'t a boolean', () => {
+				assert.throws(() => {
+					return sceneEl.refresh('foo');
+				}, 'forceFire must be a boolean, got a string');
+			});
+
+			test('fires the "program" event when the scene is in Program', done => {
+				sceneEl.addEventListener('program', () => {
+					done();
+				});
+				programRep.value = {name: 'fooScene'};
+				programRep.emit('change', {newVal: programRep.value});
+			});
+
+			test('fires the "preview" event when the scene is in Preview (but not in Program)', done => {
+				sceneEl.addEventListener('preview', () => {
+					done();
+				});
+				programRep.value = {name: 'barScene'};
+				previewRep.value = {name: 'fooScene'};
+				previewRep.emit('change', {newVal: previewRep.value});
+			});
+
+			test('fires the "program" event upon receiving a transitioning message for its scene', done => {
+				sceneEl.addEventListener('program', () => {
+					done();
+				});
+				nodecg.emit('obs:transitioning', {sceneName: 'fooScene'});
+			});
+
+			test('does nothing upon receiving a transition message for another scene', done => {
+				sceneEl.addEventListener('program', () => {
+					done('unexpected "program" event');
+				});
+				sceneEl.addEventListener('preview', () => {
+					done('unexpected "preview" event');
+				});
+				nodecg.emit('obs:transitioning', {sceneName: 'barScene'});
+				setTimeout(() => {
+					done();
+				}, 10);
+			});
+
+			test('removes old listeners when changing namespace', () => {
+				// Assert that everything is as we expect before the change.
+				assert.equal(nodecg.listeners('obs:transitioning')[0], sceneEl._handleTransitionMsg);
+				assert.equal(sceneEl._previewSceneRep, nodecg.replicantsMap.get('obs:previewScene'));
+				assert.equal(sceneEl._programSceneRep, nodecg.replicantsMap.get('obs:programScene'));
+				assert.equal(sceneEl._previewSceneRep.listeners('change')[0], sceneEl._handlePreviewOrProgramReplicantChange);
+				assert.equal(sceneEl._programSceneRep.listeners('change')[0], sceneEl._handlePreviewOrProgramReplicantChange);
+
+				// Execute the change.
+				sceneEl.namespace = 'foo';
+
+				// Assert that all the old listeners have been removed.
+				assert.lengthOf(nodecg.listeners('obs:transitioning'), 0);
+				assert.notEqual(sceneEl._previewSceneRep, nodecg.replicantsMap.get('obs:previewScene'));
+				assert.notEqual(sceneEl._programSceneRep, nodecg.replicantsMap.get('obs:programScene'));
+				assert.lengthOf(nodecg.replicantsMap.get('obs:previewScene').listeners('change'), 0);
+				assert.lengthOf(nodecg.replicantsMap.get('obs:programScene').listeners('change'), 0);
+
+				// Assert that all the new listeners have been added.
+				assert.equal(nodecg.listeners('foo:transitioning')[0], sceneEl._handleTransitionMsg);
+				assert.equal(sceneEl._previewSceneRep, nodecg.replicantsMap.get('foo:previewScene'));
+				assert.equal(sceneEl._programSceneRep, nodecg.replicantsMap.get('foo:programScene'));
+				assert.equal(sceneEl._previewSceneRep.listeners('change')[0], sceneEl._handlePreviewOrProgramReplicantChange);
+				assert.equal(sceneEl._programSceneRep.listeners('change')[0], sceneEl._handlePreviewOrProgramReplicantChange);
+			});
+
+			test('#refresh forceFire', done => {
+				sceneEl.addEventListener(sceneEl.state, () => {
+					done();
+				});
+				sceneEl.refresh(true);
+			});
+		});
+	</script>
+</body>
+</html>
