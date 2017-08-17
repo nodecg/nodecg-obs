@@ -34,6 +34,13 @@ Due to limitations of Bower, you'll need to install [`bower-npm-resolver`](https
 
 `$ bower install --save nodecg-obs-scene`
 
+## Table of Contents
+
+* [Example](#example)
+* [Features](#features)
+* [Planned Features](#planned-features)
+* [Events](#events)
+
 ## Example
 
 ```html
@@ -69,6 +76,18 @@ Due to limitations of Bower, you'll need to install [`bower-npm-resolver`](https
     </script>
 </dom-module>
 ```
+
+## Features
+
+* Realtime updates on the Preview/Program state of a scene, via either events or the `state` property.
+
+## Planned Features
+
+* None at this time, but there's a ton of things that this element _could_ do if there's a strong case for it, such as:
+  * Enumeration of sources in the scene
+  * Two-way bindings of source properties, such as visibility, position, transform, etc.
+  * A bunch more that I haven't thought of yet!
+
 
 ## Events
 
