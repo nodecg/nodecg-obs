@@ -4,9 +4,8 @@
   "description": "A NodeCG utility that provides a UI for configuring a connection to OBS via obs-websocket",
   "main": "nodecg-obs-scene.html",
   "files": [
-    "img/**/*",
-    "nodecg-widget-*.html",
-    "nodecg-widget-*.js",
+    "nodecg-obs-scene.html",
+    "nodecg-obs-scene.js",
     "bower.json"
   ],
   "directories": {
