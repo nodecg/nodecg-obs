@@ -83,3 +83,10 @@ sceneElement.addEventListener('program', () => { /* ... */ });
 sceneElement.addEventListener('preview', () => { /* ... */ });
 sceneElement.addEventListener('none', () => { /* ... */ });
 ```
+
+You can also use the `state-changed` event emitted by Polymer, if you'd like to catch all state changes:
+```js
+sceneElement.addEventListener('state-changed', e => {
+	console.log(e.detail.value); // Will be one of "program", "preview", or "none".
+});
+```
