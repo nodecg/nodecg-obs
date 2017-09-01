@@ -70,7 +70,7 @@ class OBSUtility extends OBSWebSocket {
 			clearInterval(this._reconnectInterval);
 			this._reconnectInterval = null;
 			websocketConfig.value.ip = params.ip;
-			websocketConfig.value.port = params.port;
+			websocketConfig.value.port = parseInt(params.port, 10);
 			websocketConfig.value.password = params.password;
 			this._connectToOBS().then(() => {
 				cb();

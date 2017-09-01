@@ -46,7 +46,7 @@ class NodecgWidgetObsControls extends Polymer.Element {
 	connect() {
 		nodecg.sendMessage(`${this.namespace}:connect`, {
 			ip: this.ipAddress,
-			port: this.port,
+			port: parseInt(this.port, 10),
 			password: this.password
 		}).catch(err => {
 			this.dispatchEvent(new CustomEvent('connection-failure', {
