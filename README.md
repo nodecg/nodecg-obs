@@ -20,6 +20,7 @@ Internally, `nodecg-obs` uses [`obs-websocket-js`](https://github.com/haganbmj/o
 
 - NodeCG v0.9 (currently in beta, checkout the latest commit from the [0.9-dev branch](https://github.com/nodecg/nodecg/tree/0.9-dev))
 - [Node.js v7 or greater](https://nodejs.org/)
+- [OBS Studio](https://obsproject.com/) with [`obs-websocket` v4.2.0 or greater](https://github.com/Palakis/obs-websocket/releases) installed
 
 ## Install
 
