@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="4.0.1"></a>
+## [4.0.1](https://github.com/nodecg/nodecg-obs/compare/v4.0.0...v4.0.1) (2017-10-12)
+
+
+### Bug Fixes
+
+* **nodecg-utility-obs:** revert obs-websocket-js to 0.7.0 ([d8ba6be](https://github.com/nodecg/nodecg-obs/commit/d8ba6be))
+
+
+
+
 <a name="4.0.0"></a>
 # [4.0.0](https://github.com/nodecg/nodecg-obs/compare/v3.2.2...v4.0.0) (2017-10-12)
 
