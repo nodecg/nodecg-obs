@@ -108,8 +108,8 @@ class OBSUtility extends OBSWebSocket {
 			});
 		});
 
-		nodecg.listenFor(`${namespace}:transition`, transitionName => {
-			this._transition(transitionName).catch(err => {
+		nodecg.listenFor(`${namespace}:transition`, ({name, duration} = {}) => {
+			this._transition(name, duration).catch(err => {
 				log.error('Error transitioning:', err);
 			});
 		});
@@ -287,13 +287,21 @@ class OBSUtility extends OBSWebSocket {
 	 * The transition choice can be overridden by a user code hook.
 	 * @returns {Promise}
 	 */
-	async _transition(transitionName) {
+	async _transition(transitionName, transitionDuration) {
 		if (this.replicants.websocket.value.status !== 'connected') {
 			throw new Error('Can\'t transition when not connected to OBS');
 		}
 
+		const transitionConfig = {
+			name: transitionName
+		};
+
+		if (typeof transitionDuration === 'number') {
+			transitionConfig.duration = transitionDuration;
+		}
+
 		let transitionOpts = {
-			'with-transition': transitionName
+			'with-transition': transitionConfig
 		};
 
 		if (typeof this.hooks.preTransition === 'function') {

@@ -349,10 +349,9 @@ nodecg.sendMessage('obs:previewScene', 'Foo Scene').then(() => {
 });
 ```
 
-#### <a name="message-transition"></a> `> nodecg.sendMessage('obs:transition', transitionName, callback)`
+#### <a name="message-transition"></a> `> nodecg.sendMessage('obs:transition', {name, duration}, callback)`
 
-Transitions from Preview to Program, using the specified `transitionName`. Use `null` or an empty string (`''`)
-to use the default transition in the current instance of OBS.
+Transitions from Preview to Program, using the transition with the specified `name`, over the specified `duration`. Both properties are optional, omitting either will use the default for that property.
 
 ##### Example
 

@@ -123,12 +123,12 @@ test.cb('obs:transition - without hook', t => {
 
 	t.context.obs.replicants.websocket.value.status = 'connected';
 	t.context.nodecg.emit('obs:transition');
-	t.context.nodecg.emit('obs:transition', 'transition-name');
+	t.context.nodecg.emit('obs:transition', {name: 'transition-name'});
 
 	setTimeout(() => {
 		t.true(t.context.obs.transitionToProgram.calledTwice);
-		t.deepEqual(t.context.obs.transitionToProgram.firstCall.args, [{'with-transition': undefined}]);
-		t.deepEqual(t.context.obs.transitionToProgram.secondCall.args, [{'with-transition': 'transition-name'}]);
+		t.deepEqual(t.context.obs.transitionToProgram.firstCall.args, [{'with-transition': {name: undefined}}]);
+		t.deepEqual(t.context.obs.transitionToProgram.secondCall.args, [{'with-transition': {name: 'transition-name'}}]);
 		t.end();
 	}, 0);
 });
