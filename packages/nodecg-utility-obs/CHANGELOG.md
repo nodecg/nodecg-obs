@@ -1,7 +1,24 @@
 # Change Log
 
 All notable changes to this project will be documented in this file.
-See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+<a name="4.0.0"></a>
+# [4.0.0](https://github.com/nodecg/nodecg-obs/compare/v3.2.2...v4.0.0) (2017-10-12)
+
+
+### Features
+
+* **nodecg-utility-obs:** allow specifying a duration in the obs:transition message ([c744088](https://github.com/nodecg/nodecg-obs/commit/c744088))
+* **nodecg-utility-obs:** update obs-websocket-js to v0.9.0 ([8ef4b49](https://github.com/nodecg/nodecg-obs/commit/8ef4b49))
+
+
+### BREAKING CHANGES
+
+* **nodecg-utility-obs:** Changed the argument to the `obs:transition` message to be an object with `name` and `duration` properties, instead of being just a string which specified the transition name.
+
+
+
 
 <a name="3.1.3"></a>
 ## 3.1.3 (2017-08-05)
