@@ -304,6 +304,7 @@ class OBSUtility extends OBSWebSocket {
 			'with-transition': transitionConfig
 		};
 
+		this.replicants.transitioning.value = true;
 		if (typeof this.hooks.preTransition === 'function') {
 			const modifiedTransitionOpts = await this.hooks.preTransition(clone(transitionOpts));
 			if (modifiedTransitionOpts) {

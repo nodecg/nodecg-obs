@@ -116,25 +116,26 @@ test.cb('obs:previewScene failure', t => {
 });
 
 test.cb('obs:transition - without hook', t => {
-	t.plan(3);
+	t.plan(4);
 
 	// Tell our #setPreviewScene stub to return a promise that resolves.
 	t.context.obs.transitionToProgram.resolves();
 
 	t.context.obs.replicants.websocket.value.status = 'connected';
 	t.context.nodecg.emit('obs:transition');
-	t.context.nodecg.emit('obs:transition', {name: 'transition-name'});
+	t.context.nodecg.emit('obs:transition', {name: 'transition-name', duration: 250});
 
 	setTimeout(() => {
+		t.true(t.context.obs.replicants.transitioning.value);
 		t.true(t.context.obs.transitionToProgram.calledTwice);
 		t.deepEqual(t.context.obs.transitionToProgram.firstCall.args, [{'with-transition': {name: undefined}}]);
-		t.deepEqual(t.context.obs.transitionToProgram.secondCall.args, [{'with-transition': {name: 'transition-name'}}]);
+		t.deepEqual(t.context.obs.transitionToProgram.secondCall.args, [{'with-transition': {name: 'transition-name', duration: 250}}]);
 		t.end();
 	}, 0);
 });
 
 test.cb('obs:transition - with sync hook', t => {
-	t.plan(4);
+	t.plan(5);
 
 	// Tell our #setPreviewScene stub to return a promise that resolves.
 	t.context.obs.transitionToProgram.resolves();
@@ -144,9 +145,10 @@ test.cb('obs:transition - with sync hook', t => {
 
 	t.context.obs.replicants.websocket.value.status = 'connected';
 	t.context.nodecg.emit('obs:transition');
-	t.context.nodecg.emit('obs:transition', 'transition-name');
+	t.context.nodecg.emit('obs:transition', {name: 'transition-name'});
 
 	setTimeout(() => {
+		t.true(t.context.obs.replicants.transitioning.value);
 		t.true(t.context.obs.hooks.preTransition.calledTwice);
 		t.true(t.context.obs.transitionToProgram.calledTwice);
 		t.deepEqual(t.context.obs.transitionToProgram.firstCall.args, [{'with-transition': 'custom-transition'}]);
@@ -156,7 +158,7 @@ test.cb('obs:transition - with sync hook', t => {
 });
 
 test.cb('obs:transition - with async hook', t => {
-	t.plan(4);
+	t.plan(5);
 
 	// Tell our #setPreviewScene stub to return a promise that resolves.
 	t.context.obs.transitionToProgram.resolves();
@@ -166,9 +168,10 @@ test.cb('obs:transition - with async hook', t => {
 
 	t.context.obs.replicants.websocket.value.status = 'connected';
 	t.context.nodecg.emit('obs:transition');
-	t.context.nodecg.emit('obs:transition', 'transition-name');
+	t.context.nodecg.emit('obs:transition', {name: 'transition-name'});
 
 	setTimeout(() => {
+		t.true(t.context.obs.replicants.transitioning.value);
 		t.true(t.context.obs.hooks.preTransition.calledTwice);
 		t.true(t.context.obs.transitionToProgram.calledTwice);
 		t.deepEqual(t.context.obs.transitionToProgram.firstCall.args, [{'with-transition': 'custom-transition'}]);
