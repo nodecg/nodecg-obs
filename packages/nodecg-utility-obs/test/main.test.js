@@ -181,7 +181,7 @@ test.cb('obs:transition - with async hook', t => {
 });
 
 test.cb('obs:transition failure', t => {
-	t.plan(6);
+	t.plan(4);
 
 	// Tell our #setPreviewScene stub to return a promise that rejects.
 	t.context.obs.transitionToProgram.rejects(new Error('error message'));
@@ -192,10 +192,8 @@ test.cb('obs:transition failure', t => {
 	setTimeout(() => {
 		t.true(t.context.obs.transitionToProgram.calledOnce);
 		t.true(t.context.obs.log.error.calledOnce);
-		t.is(t.context.obs.log.error.firstCall.args[0], 'Error transitioning (name: %s, duration: %s):');
-		t.is(t.context.obs.log.error.firstCall.args[1], 'Foo Transition');
-		t.is(t.context.obs.log.error.firstCall.args[2], 252);
-		t.is(t.context.obs.log.error.firstCall.args[3].message, 'error message');
+		t.is(t.context.obs.log.error.firstCall.args[0], 'Error transitioning:');
+		t.is(t.context.obs.log.error.firstCall.args[1].message, 'error message');
 		t.end();
 	}, 0);
 });

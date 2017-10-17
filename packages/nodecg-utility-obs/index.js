@@ -110,7 +110,7 @@ class OBSUtility extends OBSWebSocket {
 
 		nodecg.listenFor(`${namespace}:transition`, ({name, duration} = {}) => {
 			this._transition(name, duration).catch(err => {
-				log.error('Error transitioning (name: %s, duration: %s):', name, duration, err);
+				log.error('Error transitioning:', err);
 			});
 		});
 
@@ -312,7 +312,18 @@ class OBSUtility extends OBSWebSocket {
 			}
 		}
 
-		return this.transitionToProgram(transitionOpts);
+		try {
+			await this.transitionToProgram(transitionOpts);
+		} catch (e) {
+			// If we are able, add information about the name and duration of the transition we were trying
+			// to invoke when the error happened.
+			if (typeof e === 'object' && e.hasOwnProperty('messageId') &&
+				typeof transitionOpts === 'object' && typeof transitionOpts['with-transition'] === 'object') {
+				e.name = transitionOpts['with-transition'].name;
+				e.duration = transitionOpts['with-transition'].duration;
+			}
+			throw e;
+		}
 	}
 
 	/**
