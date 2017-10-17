@@ -317,7 +317,7 @@ class OBSUtility extends OBSWebSocket {
 		} catch (e) {
 			// If we are able, add information about the name and duration of the transition we were trying
 			// to invoke when the error happened.
-			if (typeof e === 'object' && e.hasOwnProperty('messageId') &&
+			if (typeof e === 'object' && {}.hasOwnProperty.call(e, 'messageId') &&
 				typeof transitionOpts === 'object' && typeof transitionOpts['with-transition'] === 'object') {
 				e.name = transitionOpts['with-transition'].name;
 				e.duration = transitionOpts['with-transition'].duration;
