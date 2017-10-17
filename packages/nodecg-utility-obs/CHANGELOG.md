@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="4.1.1"></a>
+## [4.1.1](https://github.com/nodecg/nodecg-obs/compare/v4.1.0...v4.1.1) (2017-10-17)
+
+
+### Bug Fixes
+
+* **nodecg-utility-obs:** improve logging of transition errors to include name and duration when modified by a hook ([d6d7d8d](https://github.com/nodecg/nodecg-obs/commit/d6d7d8d))
+
+
+
+
 <a name="4.1.0"></a>
 # [4.1.0](https://github.com/nodecg/nodecg-obs/compare/v4.0.2...v4.1.0) (2017-10-17)
 
