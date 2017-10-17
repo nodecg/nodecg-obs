@@ -110,7 +110,7 @@ class OBSUtility extends OBSWebSocket {
 
 		nodecg.listenFor(`${namespace}:transition`, ({name, duration} = {}) => {
 			this._transition(name, duration).catch(err => {
-				log.error('Error transitioning:', err);
+				log.error('Error transitioning (name: %s, duration: %s):', name, duration, err);
 			});
 		});
 

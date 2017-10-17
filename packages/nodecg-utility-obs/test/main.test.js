@@ -181,19 +181,21 @@ test.cb('obs:transition - with async hook', t => {
 });
 
 test.cb('obs:transition failure', t => {
-	t.plan(4);
+	t.plan(6);
 
 	// Tell our #setPreviewScene stub to return a promise that rejects.
 	t.context.obs.transitionToProgram.rejects(new Error('error message'));
 
 	t.context.obs.replicants.websocket.value.status = 'connected';
-	t.context.nodecg.emit('obs:transition');
+	t.context.nodecg.emit('obs:transition', {name: 'Foo Transition', duration: 252});
 
 	setTimeout(() => {
 		t.true(t.context.obs.transitionToProgram.calledOnce);
 		t.true(t.context.obs.log.error.calledOnce);
-		t.is(t.context.obs.log.error.firstCall.args[0], 'Error transitioning:');
-		t.is(t.context.obs.log.error.firstCall.args[1].message, 'error message');
+		t.is(t.context.obs.log.error.firstCall.args[0], 'Error transitioning (name: %s, duration: %s):');
+		t.is(t.context.obs.log.error.firstCall.args[1], 'Foo Transition');
+		t.is(t.context.obs.log.error.firstCall.args[2], 252);
+		t.is(t.context.obs.log.error.firstCall.args[3].message, 'error message');
 		t.end();
 	}, 0);
 });
