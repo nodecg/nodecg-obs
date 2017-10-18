@@ -315,6 +315,8 @@ class OBSUtility extends OBSWebSocket {
 		try {
 			await this.transitionToProgram(transitionOpts);
 		} catch (e) {
+			this.replicants.transitioning.value = false;
+
 			// If we are able, add information about the name and duration of the transition we were trying
 			// to invoke when the error happened.
 			if (typeof e === 'object' && {}.hasOwnProperty.call(e, 'messageId') &&
