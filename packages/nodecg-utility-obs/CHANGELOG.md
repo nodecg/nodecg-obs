@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="4.1.2"></a>
+## [4.1.2](https://github.com/nodecg/nodecg-obs/compare/v4.1.1...v4.1.2) (2017-10-18)
+
+
+### Bug Fixes
+
+* **nodecg-utility-obs:** avoid getting stuck in the "transitioning" state when a transition fails ([158149d](https://github.com/nodecg/nodecg-obs/commit/158149d))
+
+
+
+
 <a name="4.1.1"></a>
 ## [4.1.1](https://github.com/nodecg/nodecg-obs/compare/v4.1.0...v4.1.1) (2017-10-17)
 
