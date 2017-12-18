@@ -185,7 +185,7 @@ If none of the available hooks fit your use case, please open an [issue](https:/
 
 #### <a name="hooks-preTransition"></a> `> Hook preTransition(transitionOpts)`
 
-This hook runs just before `OBSUtility` sends the [`TransitionToProgram`](https://github.com/Palakis/obs-websocket/blob/master/PROTOCOL.md#transitiontoprogram) message. The `transitionOpts` argument contains a **clone** of the options that `OBSUtility` will send along with this `TransitionToProgram` request. You may make any modificatrions you wish to this object, but **you must return your modified object** for your changes to have effect.
+This hook runs just before `OBSUtility` sends the [`TransitionToProgram`](https://github.com/Palakis/obs-websocket/blob/master/PROTOCOL.md#transitiontoprogram) message. The `transitionOpts` argument contains a **clone** of the options that `OBSUtility` will send along with this `TransitionToProgram` request. You may make any modifications you wish to this object, but **you must return your modified object** for your changes to have effect.
 
 If your `preTransition` hook returns a Promise, `OBSUtility` will wait for it to resolve before continuing. That Promise can return the modified `transitionOpts`, if needed.
 
