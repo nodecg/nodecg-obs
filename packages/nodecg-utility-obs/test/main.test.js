@@ -291,7 +291,8 @@ test('on PreviewSceneChanged', t => {
 });
 
 test('on TransitionBegin', t => {
-	t.context.obs.replicants.previewScene.value = {name: 'foo-scene'};
+	t.context.obs.replicants.previewScene.value = {name: 'to-scene'};
+	t.context.obs.replicants.programScene.value = {name: 'from-scene'};
 
 	t.context.obs.emit('TransitionBegin');
 
@@ -299,7 +300,11 @@ test('on TransitionBegin', t => {
 	t.true(t.context.nodecg.sendMessage.calledOnce);
 	t.deepEqual(t.context.nodecg.sendMessage.firstCall.args, [
 		'obs:transitioning',
-		{sceneName: 'foo-scene'}
+		{
+			sceneName: 'to-scene',
+			toScene: 'to-scene',
+			fromScene: 'from-scene'
+		}
 	]);
 });
 

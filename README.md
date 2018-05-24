@@ -292,8 +292,10 @@ Relevant Schemas:
 
 #### <a name="message-transitioning"></a> `> nodecg.listenFor('obs:transitioning', callback)`
 
-Emitted whenever a transition begins in OBS. First and only argument is an object,
-whose only property is `sceneName`; a string of the name of the scene being transitioned to.
+Emitted whenever a transition begins in OBS. First and only argument is an object with the following properties:
+- `toScene` <string> - The name scene being transitioned **to** (the Preview scene at the time of the transition starting).
+- `fromScene` <string> - The name of the scene being transitioned **from** (the Program scene at the time of the transition starting).
+- `sceneName` <string> (deprecated) - Same as `toScene`.
 
 ##### Example
 
