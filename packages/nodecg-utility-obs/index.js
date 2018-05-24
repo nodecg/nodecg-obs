@@ -140,7 +140,7 @@ class OBSUtility extends OBSWebSocket {
 			nodecg.sendMessage(`${namespace}:transitioning`, {
 				sceneName: toScene,
 				fromScene: programScene.value ? programScene.value.name : undefined,
-				toScene: toScene
+				toScene
 			});
 			transitioning.value = true;
 		});
