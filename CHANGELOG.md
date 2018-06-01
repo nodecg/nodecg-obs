@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="4.3.1"></a>
+## [4.3.1](https://github.com/nodecg/nodecg-obs/compare/v4.3.0...v4.3.1) (2018-06-01)
+
+
+### Bug Fixes
+
+* **nodecg-utility-obs:** add callback handlers for message listeners which were missing them ([5325755](https://github.com/nodecg/nodecg-obs/commit/5325755))
+
+
+
+
 <a name="4.3.0"></a>
 # [4.3.0](https://github.com/nodecg/nodecg-obs/compare/v4.2.0...v4.3.0) (2018-06-01)
 
