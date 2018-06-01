@@ -29,9 +29,11 @@
 			let previewRep;
 			let programRep;
 			let sceneEl;
+			let increment = 0;
 
 			setup(() => {
-				window.nodecg = new MockNodeCG();
+				// Make a new API context for each test.
+				window.nodecg = new MockNodeCG({bundleName: `test-bundle-${increment++}`});
 				previewRep = nodecg.Replicant('obs:previewScene');
 				programRep = nodecg.Replicant('obs:programScene');
 				sceneEl = fixture('nodecg-obs-scene');
@@ -82,10 +84,12 @@
 			});
 
 			test('removes old listeners when changing namespace', () => {
+				const replicants = MockNodeCG.declaredReplicants[nodecg.bundleName];
+
 				// Assert that everything is as we expect before the change.
 				assert.equal(nodecg.listeners('obs:transitioning')[0], sceneEl._handleTransitionMsg);
-				assert.equal(sceneEl._previewSceneRep, nodecg.replicantsMap.get('obs:previewScene'));
-				assert.equal(sceneEl._programSceneRep, nodecg.replicantsMap.get('obs:programScene'));
+				assert.equal(sceneEl._previewSceneRep, replicants['obs:previewScene']);
+				assert.equal(sceneEl._programSceneRep, replicants['obs:programScene']);
 				assert.equal(sceneEl._previewSceneRep.listeners('change')[0], sceneEl._handlePreviewOrProgramReplicantChange);
 				assert.equal(sceneEl._programSceneRep.listeners('change')[0], sceneEl._handlePreviewOrProgramReplicantChange);
 
@@ -94,15 +98,15 @@
 
 				// Assert that all the old listeners have been removed.
 				assert.lengthOf(nodecg.listeners('obs:transitioning'), 0);
-				assert.notEqual(sceneEl._previewSceneRep, nodecg.replicantsMap.get('obs:previewScene'));
-				assert.notEqual(sceneEl._programSceneRep, nodecg.replicantsMap.get('obs:programScene'));
-				assert.lengthOf(nodecg.replicantsMap.get('obs:previewScene').listeners('change'), 0);
-				assert.lengthOf(nodecg.replicantsMap.get('obs:programScene').listeners('change'), 0);
+				assert.notEqual(sceneEl._previewSceneRep, replicants['obs:previewScene']);
+				assert.notEqual(sceneEl._programSceneRep, replicants['obs:programScene']);
+				assert.lengthOf(replicants['obs:previewScene'].listeners('change'), 0);
+				assert.lengthOf(replicants['obs:programScene'].listeners('change'), 0);
 
 				// Assert that all the new listeners have been added.
 				assert.equal(nodecg.listeners('foo:transitioning')[0], sceneEl._handleTransitionMsg);
-				assert.equal(sceneEl._previewSceneRep, nodecg.replicantsMap.get('foo:previewScene'));
-				assert.equal(sceneEl._programSceneRep, nodecg.replicantsMap.get('foo:programScene'));
+				assert.equal(sceneEl._previewSceneRep, replicants['foo:previewScene']);
+				assert.equal(sceneEl._programSceneRep, replicants['foo:programScene']);
 				assert.equal(sceneEl._previewSceneRep.listeners('change')[0], sceneEl._handlePreviewOrProgramReplicantChange);
 				assert.equal(sceneEl._programSceneRep.listeners('change')[0], sceneEl._handlePreviewOrProgramReplicantChange);
 			});
