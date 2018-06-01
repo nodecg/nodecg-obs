@@ -108,10 +108,23 @@ class OBSUtility extends OBSWebSocket {
 			});
 		});
 
-		nodecg.listenFor(`${namespace}:transition`, ({name, duration} = {}) => {
-			this._transition(name, duration).catch(err => {
-				log.error('Error transitioning:', err);
-			});
+		nodecg.listenFor(`${namespace}:transition`, async ({name, duration, sceneName} = {}) => {
+			if (sceneName) {
+				try {
+					await this.setPreviewScene({
+						'scene-name': sceneName
+					});
+				} catch (error) {
+					log.error('Error setting preview scene for transition:', error);
+					return;
+				}
+			}
+
+			try {
+				await this._transition(name, duration);
+			} catch (error) {
+				log.error('Error transitioning:', error);
+			}
 		});
 
 		this.on('ConnectionClosed', () => {

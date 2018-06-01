@@ -351,9 +351,11 @@ nodecg.sendMessage('obs:previewScene', 'Foo Scene').then(() => {
 });
 ```
 
-#### <a name="message-transition"></a> `> nodecg.sendMessage('obs:transition', {name, duration}, callback)`
+#### <a name="message-transition"></a> `> nodecg.sendMessage('obs:transition', {name, duration, sceneName}, callback)`
 
 Transitions from Preview to Program, using the transition with the specified `name`, over the specified `duration`. Both properties are optional, omitting either will use the default for that property.
+
+By default, will transition to whatever the current Preview scene is. If you wish to specify a specific scene to transition to, provide it as the optional `sceneName` parameter.
 
 ##### Example
 

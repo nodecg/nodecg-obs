@@ -118,7 +118,7 @@ test.cb('obs:previewScene failure', t => {
 test.cb('obs:transition - without hook', t => {
 	t.plan(4);
 
-	// Tell our #setPreviewScene stub to return a promise that resolves.
+	// Tell our #transitionToProgram stub to return a promise that resolves.
 	t.context.obs.transitionToProgram.resolves();
 
 	t.context.obs.replicants.websocket.value.status = 'connected';
@@ -137,7 +137,7 @@ test.cb('obs:transition - without hook', t => {
 test.cb('obs:transition - with sync hook', t => {
 	t.plan(5);
 
-	// Tell our #setPreviewScene stub to return a promise that resolves.
+	// Tell our #transitionToProgram stub to return a promise that resolves.
 	t.context.obs.transitionToProgram.resolves();
 
 	t.context.obs.hooks.preTransition = sinon.stub();
@@ -160,7 +160,7 @@ test.cb('obs:transition - with sync hook', t => {
 test.cb('obs:transition - with async hook', t => {
 	t.plan(5);
 
-	// Tell our #setPreviewScene stub to return a promise that resolves.
+	// Tell our #transitionToProgram stub to return a promise that resolves.
 	t.context.obs.transitionToProgram.resolves();
 
 	t.context.obs.hooks.preTransition = sinon.stub();
@@ -180,10 +180,30 @@ test.cb('obs:transition - with async hook', t => {
 	}, 0);
 });
 
+test.cb('obs:transition - with sceneName', t => {
+	t.plan(5);
+
+	// Tell our stubs to return a promise that resolves.
+	t.context.obs.setPreviewScene.resolves();
+	t.context.obs.transitionToProgram.resolves();
+
+	t.context.obs.replicants.websocket.value.status = 'connected';
+	t.context.nodecg.emit('obs:transition', {name: 'transition-name', duration: 250, sceneName: 'Foo Scene'});
+
+	setTimeout(() => {
+		t.true(t.context.obs.replicants.transitioning.value);
+		t.true(t.context.obs.setPreviewScene.calledOnce);
+		t.deepEqual(t.context.obs.setPreviewScene.firstCall.args, [{'scene-name': 'Foo Scene'}]);
+		t.true(t.context.obs.transitionToProgram.calledOnce);
+		t.deepEqual(t.context.obs.transitionToProgram.firstCall.args, [{'with-transition': {name: 'transition-name', duration: 250}}]);
+		t.end();
+	}, 0);
+});
+
 test.cb('obs:transition failure', t => {
 	t.plan(4);
 
-	// Tell our #setPreviewScene stub to return a promise that rejects.
+	// Tell our #transitionToProgram stub to return a promise that rejects.
 	t.context.obs.transitionToProgram.rejects(new Error('error message'));
 
 	t.context.obs.replicants.websocket.value.status = 'connected';
