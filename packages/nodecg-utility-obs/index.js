@@ -65,7 +65,7 @@ class OBSUtility extends OBSWebSocket {
 			}
 		});
 
-		nodecg.listenFor(`${namespace}:connect`, (params, cb) => {
+		nodecg.listenFor(`${namespace}:connect`, (params, callback = function () {}) => {
 			this._ignoreConnectionClosedEvents = false;
 			clearInterval(this._reconnectInterval);
 			this._reconnectInterval = null;
@@ -73,49 +73,51 @@ class OBSUtility extends OBSWebSocket {
 			websocketConfig.value.port = parseInt(params.port, 10);
 			websocketConfig.value.password = params.password;
 			this._connectToOBS().then(() => {
-				cb();
+				callback();
 			}).catch(err => {
 				websocketConfig.value.status = 'error';
 				log.error('Failed to connect:', err);
 
 				/* istanbul ignore else: this is just an overly-safe way of logging these critical errors */
 				if (err.error && typeof err.error === 'string') {
-					cb(err.error);
+					callback(err.error);
 				} else if (err.message) {
-					cb(err.message);
+					callback(err.message);
 				} else if (err.code) {
-					cb(err.code);
+					callback(err.code);
 				} else {
-					cb(err);
+					callback(err);
 				}
 			});
 		});
 
-		nodecg.listenFor(`${namespace}:disconnect`, () => {
+		nodecg.listenFor(`${namespace}:disconnect`, (_data, callback = function () {}) => {
 			this._ignoreConnectionClosedEvents = true;
 			clearInterval(this._reconnectInterval);
 			this._reconnectInterval = null;
 			websocketConfig.value.status = 'disconnected';
 			this.disconnect();
 			log.info('Operator-requested disconnect.');
+			callback();
 		});
 
-		nodecg.listenFor(`${namespace}:previewScene`, sceneName => {
-			this.setPreviewScene({
-				'scene-name': sceneName
-			}).catch(err => {
-				log.error('Error setting preview scene:', err);
-			});
+		nodecg.listenFor(`${namespace}:previewScene`, async (sceneName, callback = function () {}) => {
+			try {
+				await this.setPreviewScene({'scene-name': sceneName});
+				callback();
+			} catch (error) {
+				log.error('Error setting preview scene:', error);
+				callback(error);
+			}
 		});
 
-		nodecg.listenFor(`${namespace}:transition`, async ({name, duration, sceneName} = {}) => {
+		nodecg.listenFor(`${namespace}:transition`, async ({name, duration, sceneName} = {}, callback = function () {}) => {
 			if (sceneName) {
 				try {
-					await this.setPreviewScene({
-						'scene-name': sceneName
-					});
+					await this.setPreviewScene({'scene-name': sceneName});
 				} catch (error) {
 					log.error('Error setting preview scene for transition:', error);
+					callback(error);
 					return;
 				}
 			}
@@ -124,7 +126,11 @@ class OBSUtility extends OBSWebSocket {
 				await this._transition(name, duration);
 			} catch (error) {
 				log.error('Error transitioning:', error);
+				callback(error);
+				return;
 			}
+
+			callback();
 		});
 
 		this.on('ConnectionClosed', () => {

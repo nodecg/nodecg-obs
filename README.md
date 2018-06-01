@@ -327,7 +327,7 @@ nodecg.sendMessage('obs:connect', {
 });
 ```
 
-#### <a name="message-disconnect"></a> `> nodecg.sendMessage('obs:disconnect')`
+#### <a name="message-disconnect"></a> `> nodecg.sendMessage('obs:disconnect', callback)`
 
 Disconnects from OBS.
 
