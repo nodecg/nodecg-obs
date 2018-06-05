@@ -314,7 +314,7 @@ test('on TransitionBegin', t => {
 	t.context.obs.replicants.previewScene.value = {name: 'to-scene'};
 	t.context.obs.replicants.programScene.value = {name: 'from-scene'};
 
-	t.context.obs.emit('TransitionBegin');
+	t.context.obs.emit('TransitionBegin', {name: 'Transiton Name', duration: 500});
 
 	t.is(t.context.obs.replicants.transitioning.value, true);
 	t.true(t.context.nodecg.sendMessage.calledOnce);
@@ -323,7 +323,9 @@ test('on TransitionBegin', t => {
 		{
 			sceneName: 'to-scene',
 			toScene: 'to-scene',
-			fromScene: 'from-scene'
+			fromScene: 'from-scene',
+			name: 'Transiton Name',
+			duration: 500
 		}
 	]);
 });
