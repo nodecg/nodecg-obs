@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="4.5.0"></a>
+# [4.5.0](https://github.com/nodecg/nodecg-obs/compare/v4.4.0...v4.5.0) (2018-06-17)
+
+
+### Features
+
+* **nodecg-widget-obs:** show names in tabs ([9116953](https://github.com/nodecg/nodecg-obs/commit/9116953))
+
+
+
+
 <a name="4.3.0"></a>
 # [4.3.0](https://github.com/nodecg/nodecg-obs/compare/v4.2.0...v4.3.0) (2018-06-01)
 
