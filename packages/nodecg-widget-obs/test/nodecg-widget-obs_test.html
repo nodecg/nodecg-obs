@@ -54,8 +54,6 @@
 			});
 
 			test('shows the right number of tabs', () => {
-				const tabElements = shadowRoot.querySelectorAll('paper-tab');
-
 				namespaces.value = NAMESPACES.slice(0, 1);
 				namespaces.emit('change', namespaces.value);
 				Polymer.flush();
@@ -65,28 +63,19 @@
 				namespaces.emit('change', namespaces.value);
 				Polymer.flush();
 				assert.isFalse(shadowRoot.getElementById('tabs').hidden);
-				assert.isFalse(tabElements[0].hidden);
-				assert.isFalse(tabElements[1].hidden);
-				assert.isTrue(tabElements[2].hidden);
-				assert.isTrue(tabElements[3].hidden);
+				assert.lengthOf(shadowRoot.querySelectorAll('paper-tab'), 2);
 
 				namespaces.value = NAMESPACES.slice(0, 3);
 				namespaces.emit('change', namespaces.value);
 				Polymer.flush();
 				assert.isFalse(shadowRoot.getElementById('tabs').hidden);
-				assert.isFalse(tabElements[0].hidden);
-				assert.isFalse(tabElements[1].hidden);
-				assert.isFalse(tabElements[2].hidden);
-				assert.isTrue(tabElements[3].hidden);
+				assert.lengthOf(shadowRoot.querySelectorAll('paper-tab'), 3);
 
 				namespaces.value = NAMESPACES.slice(0, 4);
 				namespaces.emit('change', namespaces.value);
 				Polymer.flush();
 				assert.isFalse(shadowRoot.getElementById('tabs').hidden);
-				assert.isFalse(tabElements[0].hidden);
-				assert.isFalse(tabElements[1].hidden);
-				assert.isFalse(tabElements[2].hidden);
-				assert.isFalse(tabElements[3].hidden);
+				assert.lengthOf(shadowRoot.querySelectorAll('paper-tab'), 4);
 			});
 
 			test('shows the correct LED color on the tab for every state', () => {

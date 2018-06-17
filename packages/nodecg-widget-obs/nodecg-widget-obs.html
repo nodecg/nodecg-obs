@@ -15,24 +15,42 @@
 
 			#tabs {
 				--paper-tabs-selection-bar-color: #5BA664;
-				--paper-tab-ink: #5BA664;
 				--paper-tabs-selection-bar: {
 					border-bottom-width: 5px;
 				};
+			}
+
+			.tab {
+				--paper-tab-ink: #5BA664;
 				--paper-tab: {
 					padding: 0;
+					@apply --layout-horizontal;
+					@apply --layout-center;
 				};
 				--paper-tab-content: {
-					font-size: 20px;
-					font-weight: bold;
 					border-left: 0.5px solid transparent;
 					border-right: 0.5px solid transparent;
+					font-size: 16px;
+					font-weight: bold;
+					min-width: 1px;
+					padding: 0 10px;
 				};
 				--paper-tab-content-unselected: {
 					background-color: #E8E8E8;
 					border-left: 0.5px solid #E8E8E8;
 					border-right: 0.5px solid #E8E8E8;
 				}
+			}
+
+			.tab-led {
+				@apply --layout-flex-none;
+			}
+
+			.tab-namespace {
+				@apply --layout-flex;
+				min-width: 1px;
+				overflow: hidden;
+				text-overflow: ellipsis;
 			}
 
 			paper-tab nodecg-widget-obs-led {
@@ -49,22 +67,12 @@
 		</style>
 
 		<paper-tabs id="tabs" selected="{{selected}}" hidden="[[_lessThan(numNamespaces, 2)]]">
-			<paper-tab>
-				<nodecg-widget-obs-led color="green"></nodecg-widget-obs-led>
-				1
-			</paper-tab>
-			<paper-tab>
-				<nodecg-widget-obs-led color="red"></nodecg-widget-obs-led>
-				2
-			</paper-tab>
-			<paper-tab hidden="[[_lessThan(numNamespaces, 3)]]">
-				<nodecg-widget-obs-led color="red"></nodecg-widget-obs-led>
-				3
-			</paper-tab>
-			<paper-tab hidden="[[_lessThan(numNamespaces, 4)]]">
-				<nodecg-widget-obs-led color="red"></nodecg-widget-obs-led>
-				4
-			</paper-tab>
+			<template is="dom-repeat" items="[[namespaces]]" as="namespace">
+				<paper-tab class="tab">
+					<nodecg-widget-obs-led class="tab-led" color="green"></nodecg-widget-obs-led>
+					<span class="tab-namespace" title="[[namespace]]">[[namespace]]</span>
+				</paper-tab>
+			</template>
 		</paper-tabs>
 
 		<iron-pages id="pages" selected="[[selected]]">
@@ -74,7 +82,8 @@
 					on-status-changed="_handleControlsStatusChanged"
 					on-connected="_handleControlsConnected"
 					on-disconnected="_handleControlsDisconnected"
-					on-connection-failure="_handleControlsConnectionFailure"></nodecg-widget-obs-controls>
+					on-connection-failure="_handleControlsConnectionFailure">
+				</nodecg-widget-obs-controls>
 			</template>
 		</iron-pages>
 
