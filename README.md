@@ -222,6 +222,7 @@ module.exports = function (nodecg) {
     obs.replicants.sceneList.on('change', () => {/* ... */});
     obs.replicants.transitioning.on('change', () => {/* ... */});
     obs.replicants.studioMode.on('change', () => {/* ... */});
+    obs.replicants.streamStatus.on('change', () => {/* ... */});
 };
 ```
 
@@ -278,6 +279,13 @@ A boolean that becomes `true` when OBS is in Studio Mode `false` when OBS isn't 
  
 Relevant Schemas:
  - [`studioMode.json`](packages/nodecg-utility-obs/schemas/studioMode.json)
+ 
+#### <a name="streamStatus"></a> `> nodecg.Replicant('obs:streamStatus')`
+ 
+A boolean that becomes `true` when OBS is streaming `false` when OBS isn't streaming.
+ 
+Relevant Schemas:
+ - [`streamStatus.json`](packages/nodecg-utility-obs/schemas/streamStatus.json)
  
 #### <a name="namespaces"></a> `> nodecg.Replicant('_obs:namespaces')`
  
@@ -364,6 +372,48 @@ nodecg.sendMessage('obs:transition', 'Fade').then(() => {
     console.log('successfully started a Fade transition');
 }).catch(err => {
     console.error('failed to start Fade transition', err);
+});
+```
+
+#### <a name="message-transition"></a> `> nodecg.sendMessage('obs:startStreaming', callback)`
+
+Start streaming with OBS. 
+
+##### Example
+
+```js
+nodecg.sendMessage('obs:startStreaming').then(() => {
+    console.log('successfully started streaming');
+}).catch(err => {
+    console.error('failed to start streaming:', err);
+});
+```
+
+#### <a name="message-transition"></a> `> nodecg.sendMessage('obs:stopStreaming', callback)`
+
+Stop streaming with OBS. 
+
+##### Example
+
+```js
+nodecg.sendMessage('obs:stopStreaming').then(() => {
+    console.log('successfully stopped streaming');
+}).catch(err => {
+    console.error('failed to stop streaming:', err);
+});
+```
+
+#### <a name="message-transition"></a> `> nodecg.sendMessage('obs:setStreamKey', key, callback)`
+
+Set the OBS stream key.
+
+##### Example
+
+```js
+nodecg.sendMessage('obs:setStreamKey', 'a1b2c3d4-a1b2c3d4').then(() => {
+    console.log('successfully set stream key');
+}).catch(err => {
+    console.error('failed to set stream key:', err);
 });
 ```
 
