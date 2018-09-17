@@ -31,7 +31,6 @@
     "polymer": "Polymer/polymer#^2.0.0"
   },
   "devDependencies": {
-    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^2.0.0",
     "test-fixture": "PolymerElements/test-fixture#3.0.0-rc.1",
     "web-component-tester": "Lange/web-component-tester#patch-1",
     "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0",
