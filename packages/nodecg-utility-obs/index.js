@@ -37,6 +37,7 @@ class OBSUtility extends OBSWebSocket {
 		const sceneList = nodecg.Replicant(`${namespace}:sceneList`, {schemaPath: buildSchemaPath('sceneList')});
 		const transitioning = nodecg.Replicant(`${namespace}:transitioning`, {schemaPath: buildSchemaPath('transitioning')});
 		const studioMode = nodecg.Replicant(`${namespace}:studioMode`, {schemaPath: buildSchemaPath('studioMode')});
+        const streamStatus = nodecg.Replicant(`${namespace}:streamStatus`, {schemaPath: buildSchemaPath('streamStatus')});
 		const log = new nodecg.Logger(`${nodecg.bundleName}:${namespace}`);
 
 		// Expose convenient references to the Replicants.
@@ -49,7 +50,8 @@ class OBSUtility extends OBSWebSocket {
 			previewScene,
 			sceneList,
 			transitioning,
-			studioMode
+			studioMode,
+            streamStatus
 		};
 		this.log = log;
 		this.hooks = opts.hooks || {};
@@ -133,6 +135,39 @@ class OBSUtility extends OBSWebSocket {
 			callback();
 		});
 
+		nodecg.listenFor(`${namespace}:startStreaming`, (_data, callback = function () {}) => {
+			try {
+				this.StartStreaming();
+			} catch (error) {
+				log.error('Error starting the streaming:', error);
+				callback(error);
+				return;
+			}
+			callback();
+		});
+
+		nodecg.listenFor(`${namespace}:stopStreaming`, (_data, callback = function () {}) => {
+			try {
+				this.StopStreaming();
+			} catch (error) {
+				log.error('Error stopping the streaming:', error);
+				callback(error);
+				return;
+			}
+			callback();
+		});
+
+		nodecg.listenFor(`${namespace}:setStreamKey`, (key, callback = function () {}) => {
+			try {
+				this.SetStreamSettings({'settings': {'key': key}});
+			} catch (error) {
+				log.error('Error setting the stream key:', error);
+				callback(error);
+				return;
+			}
+			callback();
+		});
+
 		this.on('ConnectionClosed', () => {
 			this._reconnectToOBS();
 		});
@@ -167,6 +202,18 @@ class OBSUtility extends OBSWebSocket {
 
 		this.on('StudioModeSwitched', data => {
 			studioMode.value = data.newState;
+		});
+
+		this.on('StreamStatus', data => {
+			streamStatus.value = data.streaming;
+		});
+
+		this.on('StreamStarted', () => {
+			streamStatus.value = true;
+		});
+
+		this.on('StreamStopped', () => {
+			streamStatus.value = false;
 		});
 
 		setInterval(() => {
