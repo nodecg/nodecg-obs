@@ -1,0 +1,49 @@
+{
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"type": "object",
+	"additionalProperties": false,
+	"properties": {
+		"cx": {
+			"type": "number"
+		},
+		"cy": {
+			"type": "number"
+		},
+		"name": {
+			"type": "string"
+		},
+		"render": {
+			"type": "boolean"
+		},
+		"source_cx": {
+			"type": "number"
+		},
+		"source_cy": {
+			"type": "number"
+		},
+		"type": {
+			"type": "string"
+		},
+		"volume": {
+			"type": "number"
+		},
+		"x": {
+			"type": "number"
+		},
+		"y": {
+			"type": "number"
+		}
+	},
+	"required": [
+		"cx",
+		"cy",
+		"name",
+		"render",
+		"source_cx",
+		"source_cy",
+		"type",
+		"volume",
+		"x",
+		"y"
+	]
+}

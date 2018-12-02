@@ -1,6 +1,9 @@
 {
   "private": true,
   "devDependencies": {
+    "@supportclass/tsconfig-nodecg-client": "^1.0.2",
+    "@supportclass/tsconfig-nodecg-server": "^1.0.2",
+    "@types/clone": "^0.1.30",
     "copyfiles": "^1.2.0",
     "coveralls": "^2.13.1",
     "del": "^3.0.0",
@@ -11,8 +14,10 @@
     "fs-extra": "^4.0.1",
     "lerna": "^2.0.0",
     "make-dir": "^1.0.0",
+    "nodecg": "^1.3.0",
     "nyc": "^11.0.3",
     "sinon": "^3.0.0",
+    "typescript": "^3.2.1",
     "weallbehave": "^1.2.0",
     "weallcontribute": "^1.0.8"
   },
