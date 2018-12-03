@@ -4,8 +4,7 @@
   "description": "A NodeCG utility that exposes a set of Replicants, Messages, and other hooks for interacting with OBS via obs-websocket",
   "main": "index.js",
   "scripts": {
-    "test": "nyc ava",
-    "schema-types": "node scripts/schema-types.js"
+    "test": "nyc ava"
   },
   "author": {
     "name": "Alex Van Camp",
