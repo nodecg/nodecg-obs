@@ -37,7 +37,8 @@
     "iron-pages": "PolymerElements/iron-pages#^2.0.0"
   },
   "devDependencies": {
-    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^2.0.0",
+    "prism": "LeaVerou/prism#1.15.0",
+    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^2.1.2",
     "test-fixture": "PolymerElements/test-fixture#3.0.0",
     "web-component-tester": "Lange/web-component-tester#19a719f1d845bbc61d0af99a43f4147bd8da00e5",
     "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0",
