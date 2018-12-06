@@ -32,13 +32,12 @@
   },
   "devDependencies": {
     "test-fixture": "PolymerElements/test-fixture#3.0.0",
-    "web-component-tester": "Lange/web-component-tester#patch-1",
+    "web-component-tester": "Lange/web-component-tester#19a719f1d845bbc61d0af99a43f4147bd8da00e5",
     "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0",
     "mock-nodecg": "nodecg/mock-nodecg#^1.6.0"
   },
   "resolutions": {
     "polymer": "^2.0.0",
-    "webcomponentsjs": "^1.0.0",
-    "test-fixture": "3.0.0"
+    "webcomponentsjs": "^1.0.0"
   }
 }
