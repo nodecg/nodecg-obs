@@ -4,7 +4,9 @@
   "description": "A NodeCG utility that exposes a set of Replicants, Messages, and other hooks for interacting with OBS via obs-websocket",
   "main": "index.js",
   "scripts": {
-    "test": "nyc ava"
+    "pretest": "npm run build",
+    "test": "nyc ava",
+    "build": "tsc -p tsconfig.json"
   },
   "author": {
     "name": "Alex Van Camp",
@@ -23,7 +25,7 @@
     "json-schema-to-typescript": "^6.1.0",
     "mock-nodecg": "^1.0.1",
     "mockery": "^2.0.0",
-    "obs-websocket-js-types": "^4.4.0"
+    "obs-websocket-js-types": "github:lange/obs-websocket-js-types#3e0621c75a45cdeb831d68587212fd27b2782708"
   },
   "keywords": [
     "nodecg",

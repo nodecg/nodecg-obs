@@ -13,7 +13,6 @@ import {PreviewScene} from './types/schemas/previewScene';
 import {SceneList} from './types/schemas/sceneList';
 import {Transitioning} from './types/schemas/transitioning';
 import {StudioMode} from './types/schemas/studioMode';
-import {StreamStatus} from './types/schemas/streamStatus';
 import {Namespaces} from './types/schemas/namespaces';
 
 interface TransitionOptions {
@@ -40,12 +39,12 @@ class OBSUtility extends OBSWebSocket {
 		sceneList: Replicant<SceneList>;
 		transitioning: Replicant<Transitioning>;
 		studioMode: Replicant<StudioMode>;
-		streamStatus: Replicant<StreamStatus>;
 	};
 	log: Logger;
 
 	private _ignoreConnectionClosedEvents = false;
 	private _reconnectInterval: NodeJS.Timeout | null = null;
+	private _connected: boolean;
 
 	constructor(nodecg: NodeCG, opts: {namespace?: string; hooks?: Partial<Hooks>} = {}) {
 		super();
@@ -72,7 +71,6 @@ class OBSUtility extends OBSWebSocket {
 		const sceneList = nodecg.Replicant<SceneList>(`${namespace}:sceneList`, {schemaPath: buildSchemaPath('sceneList')});
 		const transitioning = nodecg.Replicant<Transitioning>(`${namespace}:transitioning`, {schemaPath: buildSchemaPath('transitioning')});
 		const studioMode = nodecg.Replicant<StudioMode>(`${namespace}:studioMode`, {schemaPath: buildSchemaPath('studioMode')});
-        const streamStatus = nodecg.Replicant<StreamStatus>(`${namespace}:streamStatus`, {schemaPath: buildSchemaPath('streamStatus')});
 		const log = new nodecg.Logger(`${nodecg.bundleName}:${namespace}`);
 
 		// Expose convenient references to the Replicants.
@@ -85,8 +83,7 @@ class OBSUtility extends OBSWebSocket {
 			previewScene,
 			sceneList,
 			transitioning,
-			studioMode,
-            streamStatus
+			studioMode
 		};
 		this.log = log;
 		this.hooks = opts.hooks || {};
@@ -220,22 +217,6 @@ class OBSUtility extends OBSWebSocket {
 			}
 		});
 
-		nodecg.listenFor(`${namespace}:setStreamKey`, (key, callback) => {
-			try {
-				this.send('SetStreamSettings', {'settings': {'key': key}});
-			} catch (error) {
-				log.error('Error setting the stream key:', error);
-				if (callback && !callback.handled) {
-					callback(error);
-				}
-				return;
-			}
-
-			if (callback && !callback.handled) {
-				callback();
-			}
-		});
-
 		this.on('ConnectionClosed', () => {
 			this._reconnectToOBS();
 		});
@@ -252,7 +233,7 @@ class OBSUtility extends OBSWebSocket {
 
 		this.on('PreviewSceneChanged', data => {
 			previewScene.value = {
-				name: data.sceneName,
+				name: data['scene-name'],
 				sources: data.sources
 			};
 		});
@@ -269,19 +250,7 @@ class OBSUtility extends OBSWebSocket {
 		});
 
 		this.on('StudioModeSwitched', data => {
-			studioMode.value = data.newState;
-		});
-
-		this.on('StreamStatus', data => {
-			streamStatus.value = data.streaming;
-		});
-
-		this.on('StreamStarted', () => {
-			streamStatus.value = true;
-		});
-
-		this.on('StreamStopped', () => {
-			streamStatus.value = false;
+			studioMode.value = data['new-state'];
 		});
 
 		setInterval(() => {
@@ -411,7 +380,7 @@ class OBSUtility extends OBSWebSocket {
 	 */
 	_updateStudioMode() {
 		return this.send('GetStudioModeStatus').then(res => {
-			this.replicants.studioMode.value = res.studioMode;
+			this.replicants.studioMode.value = res['studio-mode'];
 		}).catch(err => {
 			this.log.error('Error getting studio mode status:', err);
 		});

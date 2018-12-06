@@ -13,7 +13,7 @@ mockery.registerMock('obs-websocket-js', MockOBSWebsocketJS);
 mockery.enable({warnOnUnregistered: false});
 
 // This library. Must be required after we register our mocks.
-const OBS = require('../index.js');
+const OBS = require('../dist/index.js');
 
 test.beforeEach(t => {
 	OBS._clearUsedNamespaces();
@@ -85,14 +85,14 @@ test('obs:disconnect', t => {
 test.cb('obs:previewScene', t => {
 	t.plan(2);
 
-	// Tell our #setPreviewScene stub to return a promise that resolves.
-	t.context.obs.setPreviewScene.resolves();
+	// Tell our #send stub to return a promise that resolves.
+	t.context.obs.send.resolves();
 
 	t.context.nodecg.emit('obs:previewScene', 'foo-scene');
 
 	setTimeout(() => {
-		t.true(t.context.obs.setPreviewScene.calledOnce);
-		t.deepEqual(t.context.obs.setPreviewScene.firstCall.args, [{'scene-name': 'foo-scene'}]);
+		t.true(t.context.obs.send.calledOnce);
+		t.deepEqual(t.context.obs.send.firstCall.args, ['SetPreviewScene', {'scene-name': 'foo-scene'}]);
 		t.end();
 	}, 0);
 });
@@ -100,14 +100,14 @@ test.cb('obs:previewScene', t => {
 test.cb('obs:previewScene failure', t => {
 	t.plan(5);
 
-	// Tell our #setPreviewScene stub to return a promise that rejects.
-	t.context.obs.setPreviewScene.rejects(new Error('error message'));
+	// Tell our #send stub to return a promise that rejects.
+	t.context.obs.send.rejects(new Error('error message'));
 
 	t.context.nodecg.emit('obs:previewScene', 'foo-scene');
 
 	setTimeout(() => {
-		t.true(t.context.obs.setPreviewScene.calledOnce);
-		t.deepEqual(t.context.obs.setPreviewScene.firstCall.args, [{'scene-name': 'foo-scene'}]);
+		t.true(t.context.obs.send.calledOnce);
+		t.deepEqual(t.context.obs.send.firstCall.args, ['SetPreviewScene', {'scene-name': 'foo-scene'}]);
 		t.true(t.context.obs.log.error.calledOnce);
 		t.is(t.context.obs.log.error.firstCall.args[0], 'Error setting preview scene:');
 		t.is(t.context.obs.log.error.firstCall.args[1].message, 'error message');
@@ -118,8 +118,8 @@ test.cb('obs:previewScene failure', t => {
 test.cb('obs:transition - without hook', t => {
 	t.plan(4);
 
-	// Tell our #transitionToProgram stub to return a promise that resolves.
-	t.context.obs.transitionToProgram.resolves();
+	// Tell our #send stub to return a promise that resolves.
+	t.context.obs.send.resolves();
 
 	t.context.obs.replicants.websocket.value.status = 'connected';
 	t.context.nodecg.emit('obs:transition');
@@ -127,9 +127,9 @@ test.cb('obs:transition - without hook', t => {
 
 	setTimeout(() => {
 		t.true(t.context.obs.replicants.transitioning.value);
-		t.true(t.context.obs.transitionToProgram.calledTwice);
-		t.deepEqual(t.context.obs.transitionToProgram.firstCall.args, [{'with-transition': {name: undefined}}]);
-		t.deepEqual(t.context.obs.transitionToProgram.secondCall.args, [{'with-transition': {name: 'transition-name', duration: 250}}]);
+		t.true(t.context.obs.send.calledTwice);
+		t.deepEqual(t.context.obs.send.firstCall.args, ['TransitionToProgram', {'with-transition': {name: undefined, duration: undefined}}]);
+		t.deepEqual(t.context.obs.send.secondCall.args, ['TransitionToProgram', {'with-transition': {name: 'transition-name', duration: 250}}]);
 		t.end();
 	}, 0);
 });
@@ -138,7 +138,7 @@ test.cb('obs:transition - with sync hook', t => {
 	t.plan(5);
 
 	// Tell our #transitionToProgram stub to return a promise that resolves.
-	t.context.obs.transitionToProgram.resolves();
+	t.context.obs.send.resolves();
 
 	t.context.obs.hooks.preTransition = sinon.stub();
 	t.context.obs.hooks.preTransition.resolves({'with-transition': 'custom-transition'});
@@ -150,9 +150,9 @@ test.cb('obs:transition - with sync hook', t => {
 	setTimeout(() => {
 		t.true(t.context.obs.replicants.transitioning.value);
 		t.true(t.context.obs.hooks.preTransition.calledTwice);
-		t.true(t.context.obs.transitionToProgram.calledTwice);
-		t.deepEqual(t.context.obs.transitionToProgram.firstCall.args, [{'with-transition': 'custom-transition'}]);
-		t.deepEqual(t.context.obs.transitionToProgram.secondCall.args, [{'with-transition': 'custom-transition'}]);
+		t.true(t.context.obs.send.calledTwice);
+		t.deepEqual(t.context.obs.send.firstCall.args, ['TransitionToProgram', {'with-transition': 'custom-transition'}]);
+		t.deepEqual(t.context.obs.send.secondCall.args, ['TransitionToProgram', {'with-transition': 'custom-transition'}]);
 		t.end();
 	}, 0);
 });
@@ -160,8 +160,8 @@ test.cb('obs:transition - with sync hook', t => {
 test.cb('obs:transition - with async hook', t => {
 	t.plan(5);
 
-	// Tell our #transitionToProgram stub to return a promise that resolves.
-	t.context.obs.transitionToProgram.resolves();
+	// Tell our #send stub to return a promise that resolves.
+	t.context.obs.send.resolves();
 
 	t.context.obs.hooks.preTransition = sinon.stub();
 	t.context.obs.hooks.preTransition.returns({'with-transition': 'custom-transition'});
@@ -173,29 +173,27 @@ test.cb('obs:transition - with async hook', t => {
 	setTimeout(() => {
 		t.true(t.context.obs.replicants.transitioning.value);
 		t.true(t.context.obs.hooks.preTransition.calledTwice);
-		t.true(t.context.obs.transitionToProgram.calledTwice);
-		t.deepEqual(t.context.obs.transitionToProgram.firstCall.args, [{'with-transition': 'custom-transition'}]);
-		t.deepEqual(t.context.obs.transitionToProgram.secondCall.args, [{'with-transition': 'custom-transition'}]);
+		t.true(t.context.obs.send.calledTwice);
+		t.deepEqual(t.context.obs.send.firstCall.args, ['TransitionToProgram', {'with-transition': 'custom-transition'}]);
+		t.deepEqual(t.context.obs.send.secondCall.args, ['TransitionToProgram', {'with-transition': 'custom-transition'}]);
 		t.end();
 	}, 0);
 });
 
 test.cb('obs:transition - with sceneName', t => {
-	t.plan(5);
+	t.plan(4);
 
 	// Tell our stubs to return a promise that resolves.
-	t.context.obs.setPreviewScene.resolves();
-	t.context.obs.transitionToProgram.resolves();
+	t.context.obs.send.resolves();
 
 	t.context.obs.replicants.websocket.value.status = 'connected';
 	t.context.nodecg.emit('obs:transition', {name: 'transition-name', duration: 250, sceneName: 'Foo Scene'});
 
 	setTimeout(() => {
 		t.true(t.context.obs.replicants.transitioning.value);
-		t.true(t.context.obs.setPreviewScene.calledOnce);
-		t.deepEqual(t.context.obs.setPreviewScene.firstCall.args, [{'scene-name': 'Foo Scene'}]);
-		t.true(t.context.obs.transitionToProgram.calledOnce);
-		t.deepEqual(t.context.obs.transitionToProgram.firstCall.args, [{'with-transition': {name: 'transition-name', duration: 250}}]);
+		t.true(t.context.obs.send.calledTwice);
+		t.deepEqual(t.context.obs.send.firstCall.args, ['SetPreviewScene', {'scene-name': 'Foo Scene'}]);
+		t.deepEqual(t.context.obs.send.secondCall.args, ['TransitionToProgram', {'with-transition': {name: 'transition-name', duration: 250}}]);
 		t.end();
 	}, 0);
 });
@@ -203,14 +201,14 @@ test.cb('obs:transition - with sceneName', t => {
 test.cb('obs:transition failure', t => {
 	t.plan(4);
 
-	// Tell our #transitionToProgram stub to return a promise that rejects.
-	t.context.obs.transitionToProgram.rejects(new Error('error message'));
+	// Tell our #send stub to return a promise that rejects.
+	t.context.obs.send.rejects(new Error('error message'));
 
 	t.context.obs.replicants.websocket.value.status = 'connected';
 	t.context.nodecg.emit('obs:transition', {name: 'Foo Transition', duration: 252});
 
 	setTimeout(() => {
-		t.true(t.context.obs.transitionToProgram.calledOnce);
+		t.true(t.context.obs.send.calledOnce);
 		t.true(t.context.obs.log.error.calledOnce);
 		t.is(t.context.obs.log.error.firstCall.args[0], 'Error transitioning:');
 		t.is(t.context.obs.log.error.firstCall.args[1].message, 'error message');
@@ -305,7 +303,7 @@ test('on PreviewSceneChanged', t => {
 	t.context.obs.emit('PreviewSceneChanged', data);
 
 	t.deepEqual(t.context.obs.replicants.previewScene.value, {
-		name: data.sceneName,
+		name: data['scene-name'],
 		sources: data.sources
 	});
 });
@@ -337,9 +335,9 @@ test('on TransitionBegin when not in Studio mode', t => {
 });
 
 test('on StudioModeSwitched', t => {
-	t.context.obs.emit('StudioModeSwitched', {newState: false});
+	t.context.obs.emit('StudioModeSwitched', {'new-state': false});
 	t.is(t.context.obs.replicants.studioMode.value, false);
-	t.context.obs.emit('StudioModeSwitched', {newState: true});
+	t.context.obs.emit('StudioModeSwitched', {'new-state': true});
 	t.is(t.context.obs.replicants.studioMode.value, true);
 });
 
@@ -386,14 +384,16 @@ test('#_fullUpdate', async t => {
 
 test('#_updateScenesList', async t => {
 	await t.context.obs._updateScenesList();
-	t.true(t.context.obs.getSceneList.calledOnce);
+	t.true(t.context.obs.send.calledOnce);
+	t.deepEqual(t.context.obs.send.firstCall.args[0], 'GetSceneList');
 	t.deepEqual(t.context.obs.replicants.sceneList.value, ['sceneName']);
 
-	t.context.obs.getSceneList.reset();
-	t.context.obs.getSceneList.rejects(new Error('boom'));
+	t.context.obs.send.reset();
+	t.context.obs.send.rejects(new Error('boom'));
 
 	await t.context.obs._updateScenesList();
-	t.true(t.context.obs.getSceneList.calledOnce);
+	t.true(t.context.obs.send.calledOnce);
+	t.deepEqual(t.context.obs.send.firstCall.args[0], 'GetSceneList');
 	t.true(t.context.obs.log.error.calledOnce);
 	t.deepEqual(t.context.obs.log.error.firstCall.args[0], 'Error updating scenes list:');
 	t.deepEqual(t.context.obs.log.error.firstCall.args[1].message, 'boom');
@@ -401,7 +401,8 @@ test('#_updateScenesList', async t => {
 
 test('#_updateProgramScene', async t => {
 	await t.context.obs._updateProgramScene();
-	t.true(t.context.obs.getCurrentScene.calledOnce);
+	t.true(t.context.obs.send.calledOnce);
+	t.deepEqual(t.context.obs.send.firstCall.args[0], 'GetCurrentScene');
 	t.deepEqual(t.context.obs.replicants.programScene.value, {
 		name: 'sceneName',
 		sources: [{
@@ -410,11 +411,12 @@ test('#_updateProgramScene', async t => {
 		}]
 	});
 
-	t.context.obs.getCurrentScene.reset();
-	t.context.obs.getCurrentScene.rejects(new Error('boom'));
+	t.context.obs.send.reset();
+	t.context.obs.send.rejects(new Error('boom'));
 
 	await t.context.obs._updateProgramScene();
-	t.true(t.context.obs.getCurrentScene.calledOnce);
+	t.true(t.context.obs.send.calledOnce);
+	t.deepEqual(t.context.obs.send.firstCall.args[0], 'GetCurrentScene');
 	t.true(t.context.obs.log.error.calledOnce);
 	t.deepEqual(t.context.obs.log.error.firstCall.args[0], 'Error updating program scene:');
 	t.deepEqual(t.context.obs.log.error.firstCall.args[1].message, 'boom');
@@ -422,7 +424,8 @@ test('#_updateProgramScene', async t => {
 
 test('#_updatePreviewScene', async t => {
 	await t.context.obs._updatePreviewScene();
-	t.true(t.context.obs.getPreviewScene.calledOnce);
+	t.true(t.context.obs.send.calledOnce);
+	t.deepEqual(t.context.obs.send.firstCall.args[0], 'GetPreviewScene');
 	t.deepEqual(t.context.obs.replicants.previewScene.value, {
 		name: 'sceneName',
 		sources: [{
@@ -431,36 +434,39 @@ test('#_updatePreviewScene', async t => {
 		}]
 	});
 
-	t.context.obs.getPreviewScene.reset();
-	t.context.obs.getPreviewScene.rejects(new Error('boom'));
+	t.context.obs.send.reset();
+	t.context.obs.send.rejects(new Error('boom'));
 
 	await t.context.obs._updatePreviewScene();
-	t.true(t.context.obs.getPreviewScene.calledOnce);
+	t.true(t.context.obs.send.calledOnce);
+	t.deepEqual(t.context.obs.send.firstCall.args[0], 'GetPreviewScene');
 	t.true(t.context.obs.log.error.calledOnce);
 	t.deepEqual(t.context.obs.log.error.firstCall.args[0], 'Error updating preview scene:');
 	t.deepEqual(t.context.obs.log.error.firstCall.args[1].message, 'boom');
 });
 
 test('#_updatePreviewScene sets previewScene replicant to null when not in studio mode', async t => {
-	// Tell our #setPreviewScene stub to return a promise that rejects.
-	t.context.obs.getPreviewScene.rejects({error: 'studio mode not enabled'});
+	// Tell our #send stub to return a promise that rejects.
+	t.context.obs.send.withArgs('GetPreviewScene').rejects({error: 'studio mode not enabled'});
 
 	await t.context.obs._updatePreviewScene();
 
-	t.true(t.context.obs.getPreviewScene.calledOnce);
+	t.true(t.context.obs.send.calledOnce);
 	t.is(t.context.obs.replicants.previewScene.value, null);
 });
 
 test('#_updateStudioMode', async t => {
 	await t.context.obs._updateStudioMode();
-	t.true(t.context.obs.getStudioModeStatus.calledOnce);
+	t.true(t.context.obs.send.calledOnce);
+	t.deepEqual(t.context.obs.send.firstCall.args[0], 'GetStudioModeStatus');
 	t.deepEqual(t.context.obs.replicants.studioMode.value, true);
 
-	t.context.obs.getStudioModeStatus.reset();
-	t.context.obs.getStudioModeStatus.rejects(new Error('boom'));
+	t.context.obs.send.reset();
+	t.context.obs.send.rejects(new Error('boom'));
 
 	await t.context.obs._updateStudioMode();
-	t.true(t.context.obs.getStudioModeStatus.calledOnce);
+	t.true(t.context.obs.send.calledOnce);
+	t.deepEqual(t.context.obs.send.firstCall.args[0], 'GetStudioModeStatus');
 	t.true(t.context.obs.log.error.calledOnce);
 	t.deepEqual(t.context.obs.log.error.firstCall.args[0], 'Error getting studio mode status:');
 	t.deepEqual(t.context.obs.log.error.firstCall.args[1].message, 'boom');
