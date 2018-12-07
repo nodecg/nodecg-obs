@@ -1,0 +1,23 @@
+{
+	"extends": "tslint-xo",
+	"rules": {
+		"await-promise": [true, "RequestPromise"],
+		"comment-format": false,
+		"early-exit": false,
+		"no-floating-promises": false,
+		"no-inner-html": false,
+		"no-non-null-assertion": false,
+		"no-require-imports": false,
+		"no-single-line-block-comment": false,
+		"no-unnecessary-type-assertion": false,
+		"restrict-plus-operands": false,
+		"strict-type-predicates": false,
+		"variable-name": [true, "ban-keywords", "check-format", "allow-leading-underscore"]
+	},
+	"linterOptions": {
+		"exclude": [
+			"src/types/schemas/currentIntermission.d.ts",
+			"bower_components/**"
+		]
+	}
+}

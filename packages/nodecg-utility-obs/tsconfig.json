@@ -1,0 +1,12 @@
+{
+	"extends": "@supportclass/tsconfig-nodecg-server",
+	"compilerOptions": {
+		"rootDir": "src",
+		"outDir": "dist"
+	},
+	"include": [
+		"src/**/*.ts",
+		"types/**/*.ts",
+		"node_modules/obs-websocket-js-types/index.d.ts"
+	]
+}

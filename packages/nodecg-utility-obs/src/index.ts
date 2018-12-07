@@ -1,42 +1,76 @@
 'use strict';
 
 // Native
-const path = require('path');
+import path = require('path');
 
 // Packages
-const clone = require('clone');
-const OBSWebSocket = require('obs-websocket-js');
+import * as clone from 'clone';
+import * as OBSWebSocket from 'obs-websocket-js';
+import {NodeCG, Replicant, Logger} from 'nodecg/types/server';
+import {Websocket} from '../types/schemas/websocket';
+import {ProgramScene} from '../types/schemas/programScene';
+import {PreviewScene} from '../types/schemas/previewScene';
+import {SceneList} from '../types/schemas/sceneList';
+import {Transitioning} from '../types/schemas/transitioning';
+import {StudioMode} from '../types/schemas/studioMode';
+import {Namespaces} from '../types/schemas/namespaces';
+
+interface TransitionOptions {
+	'with-transition': {
+		name: string;
+		duration?: number;
+	}
+}
+
+export interface Hooks {
+	preTransition(transitionOpts: TransitionOptions):
+		TransitionOptions | void | Promise<TransitionOptions> | Promise<void>
+}
 
 const usedNamespaces = new Set();
 
-class OBSUtility extends OBSWebSocket {
-	constructor(nodecg, opts = {}) {
-		let namespace = opts.namespace;
-		if (typeof opts.namespace === 'undefined') {
-			namespace = 'obs';
+export class OBSUtility extends OBSWebSocket {
+	namespace: string;
+	hooks: Partial<Hooks>;
+	replicants: {
+		websocket: Replicant<Websocket>;
+		programScene: Replicant<ProgramScene>;
+		previewScene: Replicant<PreviewScene>;
+		sceneList: Replicant<SceneList>;
+		transitioning: Replicant<Transitioning>;
+		studioMode: Replicant<StudioMode>;
+	};
+	log: Logger;
+
+	private _ignoreConnectionClosedEvents = false;
+	private _reconnectInterval: NodeJS.Timeout | null = null;
+	private _connected: boolean;
+
+	constructor(nodecg: NodeCG, opts: {namespace?: string; hooks?: Partial<Hooks>} = {}) {
+		super();
+		let namespace = 'obs';
+		if (opts.namespace !== undefined) {
+			namespace = opts.namespace;
 		}
 
 		if (usedNamespaces.has(namespace)) {
 			throw new Error(`Namespace "${namespace}" has already been used. Please choose a different namespace.`);
 		}
 
-		super();
-
 		usedNamespaces.add(namespace);
 		this.namespace = namespace;
-		const namespacesReplicant = nodecg.Replicant('_obs:namespaces', {
+		const namespacesReplicant = nodecg.Replicant<Namespaces>('_obs:namespaces', {
 			schemaPath: buildSchemaPath('namespaces'),
 			persistent: false
 		});
 		namespacesReplicant.value.push(namespace);
 
-		this._ignoreConnectionClosedEvents = false;
-		const websocketConfig = nodecg.Replicant(`${namespace}:websocket`, {schemaPath: buildSchemaPath('websocket')});
-		const programScene = nodecg.Replicant(`${namespace}:programScene`, {schemaPath: buildSchemaPath('programScene')});
-		const previewScene = nodecg.Replicant(`${namespace}:previewScene`, {schemaPath: buildSchemaPath('previewScene')});
-		const sceneList = nodecg.Replicant(`${namespace}:sceneList`, {schemaPath: buildSchemaPath('sceneList')});
-		const transitioning = nodecg.Replicant(`${namespace}:transitioning`, {schemaPath: buildSchemaPath('transitioning')});
-		const studioMode = nodecg.Replicant(`${namespace}:studioMode`, {schemaPath: buildSchemaPath('studioMode')});
+		const websocketConfig = nodecg.Replicant<Websocket>(`${namespace}:websocket`, {schemaPath: buildSchemaPath('websocket')});
+		const programScene = nodecg.Replicant<ProgramScene>(`${namespace}:programScene`, {schemaPath: buildSchemaPath('programScene')});
+		const previewScene = nodecg.Replicant<PreviewScene>(`${namespace}:previewScene`, {schemaPath: buildSchemaPath('previewScene')});
+		const sceneList = nodecg.Replicant<SceneList>(`${namespace}:sceneList`, {schemaPath: buildSchemaPath('sceneList')});
+		const transitioning = nodecg.Replicant<Transitioning>(`${namespace}:transitioning`, {schemaPath: buildSchemaPath('transitioning')});
+		const studioMode = nodecg.Replicant<StudioMode>(`${namespace}:studioMode`, {schemaPath: buildSchemaPath('studioMode')});
 		const log = new nodecg.Logger(`${nodecg.bundleName}:${namespace}`);
 
 		// Expose convenient references to the Replicants.
@@ -53,7 +87,6 @@ class OBSUtility extends OBSWebSocket {
 		};
 		this.log = log;
 		this.hooks = opts.hooks || {};
-		this._reconnectInterval = null;
 
 		websocketConfig.once('change', newVal => {
 			// If we were connected last time, try connecting again now.
@@ -65,18 +98,24 @@ class OBSUtility extends OBSWebSocket {
 			}
 		});
 
-		nodecg.listenFor(`${namespace}:connect`, (params, callback = function () {}) => {
+		nodecg.listenFor(`${namespace}:connect`, (params, callback) => {
 			this._ignoreConnectionClosedEvents = false;
-			clearInterval(this._reconnectInterval);
+			clearInterval(this._reconnectInterval!);
 			this._reconnectInterval = null;
 			websocketConfig.value.ip = params.ip;
 			websocketConfig.value.port = parseInt(params.port, 10);
 			websocketConfig.value.password = params.password;
 			this._connectToOBS().then(() => {
-				callback();
+				if (callback && !callback.handled) {
+					callback();
+				}
 			}).catch(err => {
 				websocketConfig.value.status = 'error';
 				log.error('Failed to connect:', err);
+
+				if (!callback || callback.handled) {
+					return;
+				}
 
 				/* istanbul ignore else: this is just an overly-safe way of logging these critical errors */
 				if (err.error && typeof err.error === 'string') {
@@ -91,33 +130,42 @@ class OBSUtility extends OBSWebSocket {
 			});
 		});
 
-		nodecg.listenFor(`${namespace}:disconnect`, (_data, callback = function () {}) => {
+		nodecg.listenFor(`${namespace}:disconnect`, (_data, callback) => {
 			this._ignoreConnectionClosedEvents = true;
-			clearInterval(this._reconnectInterval);
+			clearInterval(this._reconnectInterval!);
 			this._reconnectInterval = null;
 			websocketConfig.value.status = 'disconnected';
 			this.disconnect();
 			log.info('Operator-requested disconnect.');
-			callback();
-		});
 
-		nodecg.listenFor(`${namespace}:previewScene`, async (sceneName, callback = function () {}) => {
-			try {
-				await this.setPreviewScene({'scene-name': sceneName});
+			if (callback && !callback.handled) {
 				callback();
-			} catch (error) {
-				log.error('Error setting preview scene:', error);
-				callback(error);
 			}
 		});
 
-		nodecg.listenFor(`${namespace}:transition`, async ({name, duration, sceneName} = {}, callback = function () {}) => {
+		nodecg.listenFor(`${namespace}:previewScene`, async (sceneName, callback) => {
+			try {
+				await this.send('SetPreviewScene', {'scene-name': sceneName});
+				if (callback && !callback.handled) {
+					callback();
+				}
+			} catch (error) {
+				log.error('Error setting preview scene:', error);
+				if (callback && !callback.handled) {
+					callback(error);
+				}
+			}
+		});
+
+		nodecg.listenFor(`${namespace}:transition`, async ({name, duration, sceneName} = {}, callback) => {
 			if (sceneName) {
 				try {
-					await this.setPreviewScene({'scene-name': sceneName});
+					await this.send('SetPreviewScene', {'scene-name': sceneName});
 				} catch (error) {
 					log.error('Error setting preview scene for transition:', error);
-					callback(error);
+					if (callback && !callback.handled) {
+						callback(error);
+					}
 					return;
 				}
 			}
@@ -126,11 +174,47 @@ class OBSUtility extends OBSWebSocket {
 				await this._transition(name, duration);
 			} catch (error) {
 				log.error('Error transitioning:', error);
-				callback(error);
+				if (callback && !callback.handled) {
+					callback(error);
+				}
 				return;
 			}
 
-			callback();
+			if (callback && !callback.handled) {
+				callback();
+			}
+		});
+
+		nodecg.listenFor(`${namespace}:startStreaming`, (_data, callback) => {
+			try {
+				this.send('StartStreaming');
+			} catch (error) {
+				log.error('Error starting the streaming:', error);
+				if (callback && !callback.handled) {
+					callback(error);
+				}
+				return;
+			}
+
+			if (callback && !callback.handled) {
+				callback();
+			}
+		});
+
+		nodecg.listenFor(`${namespace}:stopStreaming`, (_data, callback) => {
+			try {
+				this.send('StopStreaming');
+			} catch (error) {
+				log.error('Error stopping the streaming:', error);
+				if (callback && !callback.handled) {
+					callback(error);
+				}
+				return;
+			}
+
+			if (callback && !callback.handled) {
+				callback();
+			}
 		});
 
 		this.on('ConnectionClosed', () => {
@@ -149,7 +233,7 @@ class OBSUtility extends OBSWebSocket {
 
 		this.on('PreviewSceneChanged', data => {
 			previewScene.value = {
-				name: data.sceneName,
+				name: data['scene-name'],
 				sources: data.sources
 			};
 		});
@@ -166,13 +250,13 @@ class OBSUtility extends OBSWebSocket {
 		});
 
 		this.on('StudioModeSwitched', data => {
-			studioMode.value = data.newState;
+			studioMode.value = data['new-state'];
 		});
 
 		setInterval(() => {
 			if (websocketConfig.value && websocketConfig.value.status === 'connected' && !this._connected) {
 				log.warn('Thought we were connected, but the automatic poll detected we were not. Correcting.');
-				clearInterval(this._reconnectInterval);
+				clearInterval(this._reconnectInterval!);
 				this._reconnectInterval = null;
 				this._reconnectToOBS();
 			}
@@ -197,7 +281,7 @@ class OBSUtility extends OBSWebSocket {
 			password: websocketConfig.value.password
 		}).then(() => {
 			this.log.info('Connected.');
-			clearInterval(this._reconnectInterval);
+			clearInterval(this._reconnectInterval!);
 			this._reconnectInterval = null;
 			websocketConfig.value.status = 'connected';
 			return this._fullUpdate();
@@ -246,7 +330,7 @@ class OBSUtility extends OBSWebSocket {
 	 * @returns {Promise}
 	 */
 	_updateScenesList() {
-		return this.getSceneList().then(res => {
+		return this.send('GetSceneList').then(res => {
 			this.replicants.sceneList.value = res.scenes.map(scene => scene.name);
 			return res;
 		}).catch(err => {
@@ -259,7 +343,7 @@ class OBSUtility extends OBSWebSocket {
 	 * @returns {Promise}
 	 */
 	_updateProgramScene() {
-		return this.getCurrentScene().then(res => {
+		return this.send('GetCurrentScene').then(res => {
 			this.replicants.programScene.value = {
 				name: res.name,
 				sources: res.sources
@@ -274,7 +358,7 @@ class OBSUtility extends OBSWebSocket {
 	 * Updates the previewScene replicant with the current value from OBS.
 	 */
 	_updatePreviewScene() {
-		return this.getPreviewScene().then(res => {
+		return this.send('GetPreviewScene').then(res => {
 			this.replicants.previewScene.value = {
 				name: res.name,
 				sources: res.sources
@@ -295,8 +379,8 @@ class OBSUtility extends OBSWebSocket {
 	 * @private
 	 */
 	_updateStudioMode() {
-		return this.getStudioModeStatus().then(res => {
-			this.replicants.studioMode.value = res.studioMode;
+		return this.send('GetStudioModeStatus').then(res => {
+			this.replicants.studioMode.value = res['studio-mode'];
 		}).catch(err => {
 			this.log.error('Error getting studio mode status:', err);
 		});
@@ -305,18 +389,25 @@ class OBSUtility extends OBSWebSocket {
 	/**
 	 * Transitions from preview to program with the desired transition.
 	 * Has an optional hook for overriding which transition is used.
-	 * @param [transitionName] {string} - The name of the transition to use.
+	 * @param [transitionName] - The name of the transition to use.
 	 * If not provided, will use whatever default transition is selected in this.
 	 * The transition choice can be overridden by a user code hook.
+	 * @param [transitionDuration] - The duration of the transition to use.
+	 * If not provided, will use whatever default transition duration is selected in this.
+	 * The transition duration can be overridden by a user code hook.
 	 * @returns {Promise}
 	 */
-	async _transition(transitionName, transitionDuration) {
+	async _transition(transitionName?: string, transitionDuration?: number) {
 		if (this.replicants.websocket.value.status !== 'connected') {
 			throw new Error('Can\'t transition when not connected to OBS');
 		}
 
 		const transitionConfig = {
-			name: transitionName
+			name: transitionName,
+			duration: undefined
+		} as {
+			name: string;
+			duration?: number;
 		};
 
 		if (typeof transitionDuration === 'number') {
@@ -336,7 +427,7 @@ class OBSUtility extends OBSWebSocket {
 		}
 
 		try {
-			await this.transitionToProgram(transitionOpts);
+			await this.send('TransitionToProgram', transitionOpts);
 		} catch (e) {
 			this.replicants.transitioning.value = false;
 
@@ -364,10 +455,7 @@ class OBSUtility extends OBSWebSocket {
 
 /**
  * Calculates the absolute file path to one of our local Replicant schemas.
- * @param schemaName {string}
  */
-function buildSchemaPath(schemaName) {
+function buildSchemaPath(schemaName: string) {
 	return path.resolve(__dirname, 'schemas', `${encodeURIComponent(schemaName)}.json`);
 }
-
-module.exports = OBSUtility;
