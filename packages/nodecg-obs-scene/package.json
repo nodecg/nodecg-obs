@@ -1,6 +1,6 @@
 {
   "name": "nodecg-obs-scene",
-  "version": "4.3.0",
+  "version": "5.0.0",
   "description": "A NodeCG utility that provides a UI for configuring a connection to OBS via obs-websocket",
   "main": "nodecg-obs-scene.html",
   "files": [

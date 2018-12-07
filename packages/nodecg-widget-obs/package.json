@@ -1,6 +1,6 @@
 {
   "name": "nodecg-widget-obs",
-  "version": "4.5.0",
+  "version": "5.0.0",
   "description": "A NodeCG utility that provides a UI for configuring a connection to OBS via obs-websocket",
   "main": "nodecg-widget-obs.html",
   "files": [
