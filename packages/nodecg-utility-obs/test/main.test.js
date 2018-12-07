@@ -13,7 +13,7 @@ mockery.registerMock('obs-websocket-js', MockOBSWebsocketJS);
 mockery.enable({warnOnUnregistered: false});
 
 // This library. Must be required after we register our mocks.
-const OBS = require('../dist/index.js');
+const OBS = require('../dist/index.js').OBSUtility;
 
 test.beforeEach(t => {
 	OBS._clearUsedNamespaces();

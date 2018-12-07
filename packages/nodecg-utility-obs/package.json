@@ -2,7 +2,7 @@
   "name": "nodecg-utility-obs",
   "version": "4.4.0",
   "description": "A NodeCG utility that exposes a set of Replicants, Messages, and other hooks for interacting with OBS via obs-websocket",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "pretest": "npm run build",
     "test": "nyc ava",
@@ -36,8 +36,8 @@
     "obs-websocket-js"
   ],
   "files": [
-    "*.js",
-    "lib",
+    "dist",
+    "types",
     "schemas/**/*.json"
   ],
   "engines": {

@@ -7,13 +7,13 @@ import path = require('path');
 import * as clone from 'clone';
 import * as OBSWebSocket from 'obs-websocket-js';
 import {NodeCG, Replicant, Logger} from 'nodecg/types/server';
-import {Websocket} from './types/schemas/websocket';
-import {ProgramScene} from './types/schemas/programScene';
-import {PreviewScene} from './types/schemas/previewScene';
-import {SceneList} from './types/schemas/sceneList';
-import {Transitioning} from './types/schemas/transitioning';
-import {StudioMode} from './types/schemas/studioMode';
-import {Namespaces} from './types/schemas/namespaces';
+import {Websocket} from '../types/schemas/websocket';
+import {ProgramScene} from '../types/schemas/programScene';
+import {PreviewScene} from '../types/schemas/previewScene';
+import {SceneList} from '../types/schemas/sceneList';
+import {Transitioning} from '../types/schemas/transitioning';
+import {StudioMode} from '../types/schemas/studioMode';
+import {Namespaces} from '../types/schemas/namespaces';
 
 interface TransitionOptions {
 	'with-transition': {
@@ -22,14 +22,14 @@ interface TransitionOptions {
 	}
 }
 
-interface Hooks {
+export interface Hooks {
 	preTransition(transitionOpts: TransitionOptions):
 		TransitionOptions | void | Promise<TransitionOptions> | Promise<void>
 }
 
 const usedNamespaces = new Set();
 
-class OBSUtility extends OBSWebSocket {
+export class OBSUtility extends OBSWebSocket {
 	namespace: string;
 	hooks: Partial<Hooks>;
 	replicants: {
@@ -459,5 +459,3 @@ class OBSUtility extends OBSWebSocket {
 function buildSchemaPath(schemaName: string) {
 	return path.resolve(__dirname, 'schemas', `${encodeURIComponent(schemaName)}.json`);
 }
-
-module.exports = OBSUtility;
