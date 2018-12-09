@@ -1,13 +1,13 @@
 {
   "lerna": "3.6.0",
-    "command": {
-      "publish": {
-        "conventionalCommits": true,
-        "message": "chore(release): publish %s"
-      }
-	},
+  "command": {
+    "publish": {
+      "conventionalCommits": true,
+      "message": "chore(release): publish %s"
+    }
+  },
   "packages": [
     "packages/*"
   ],
-  "version": "5.0.2"
+  "version": "5.0.3"
 }

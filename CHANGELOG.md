@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.3](https://github.com/nodecg/nodecg-obs/compare/v5.0.2...v5.0.3) (2018-12-09)
+
+**Note:** Version bump only for package nodecg-obs
+
+
+
+
+
 <a name="4.5.0"></a>
 # [4.5.0](https://github.com/nodecg/nodecg-obs/compare/v4.4.0...v4.5.0) (2018-06-17)
 

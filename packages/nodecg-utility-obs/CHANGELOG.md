@@ -1,6 +1,19 @@
 # Change Log
 
 All notable changes to this project will be documented in this file.
+See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+## [5.0.3](https://github.com/nodecg/nodecg-obs/compare/v5.0.2...v5.0.3) (2018-12-09)
+
+**Note:** Version bump only for package nodecg-utility-obs
+
+
+
+
+
+# Change Log
+
+All notable changes to this project will be documented in this file.
 See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
 <a name="5.0.2"></a>
