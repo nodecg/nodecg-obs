@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.5](https://github.com/nodecg/nodecg-obs/compare/v5.0.4...v5.0.5) (2018-12-18)
+
+
+### Bug Fixes
+
+* **nodecg-utility-obs:** make types work ([8e6c5b3](https://github.com/nodecg/nodecg-obs/commit/8e6c5b3))
+
+
+
+
+
 ## [5.0.4](https://github.com/nodecg/nodecg-obs/compare/v5.0.3...v5.0.4) (2018-12-18)
 
 
