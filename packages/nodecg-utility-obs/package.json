@@ -3,6 +3,7 @@
   "version": "5.0.4",
   "description": "A NodeCG utility that exposes a set of Replicants, Messages, and other hooks for interacting with OBS via obs-websocket",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "pretest": "npm run build",
     "test": "nyc ava",
