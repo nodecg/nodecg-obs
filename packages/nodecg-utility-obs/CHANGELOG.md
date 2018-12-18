@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.4](https://github.com/nodecg/nodecg-obs/compare/v5.0.3...v5.0.4) (2018-12-18)
+
+
+### Bug Fixes
+
+* **nodecg-utility-obs:** fix error on startup ([5bba2a0](https://github.com/nodecg/nodecg-obs/commit/5bba2a0))
+
+
+
+
+
 ## [5.0.3](https://github.com/nodecg/nodecg-obs/compare/v5.0.2...v5.0.3) (2018-12-09)
 
 **Note:** Version bump only for package nodecg-utility-obs
