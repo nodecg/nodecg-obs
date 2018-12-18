@@ -457,5 +457,5 @@ export class OBSUtility extends OBSWebSocket {
  * Calculates the absolute file path to one of our local Replicant schemas.
  */
 function buildSchemaPath(schemaName: string) {
-	return path.resolve(__dirname, 'schemas', `${encodeURIComponent(schemaName)}.json`);
+	return path.resolve(__dirname, '../schemas', `${encodeURIComponent(schemaName)}.json`);
 }

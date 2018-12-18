@@ -376,6 +376,6 @@ exports.OBSUtility = OBSUtility;
  * Calculates the absolute file path to one of our local Replicant schemas.
  */
 function buildSchemaPath(schemaName) {
-    return path.resolve(__dirname, 'schemas', `${encodeURIComponent(schemaName)}.json`);
+    return path.resolve(__dirname, '../schemas', `${encodeURIComponent(schemaName)}.json`);
 }
 //# sourceMappingURL=index.js.map
