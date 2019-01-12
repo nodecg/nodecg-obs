@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.6](https://github.com/nodecg/nodecg-obs/compare/v5.0.5...v5.0.6) (2019-01-12)
+
+
+### Bug Fixes
+
+* **nodecg-utility-obs:** log socket errors, and reconnect when they occur ([a515867](https://github.com/nodecg/nodecg-obs/commit/a515867))
+
+
+
+
+
 ## [5.0.5](https://github.com/nodecg/nodecg-obs/compare/v5.0.4...v5.0.5) (2018-12-18)
 
 
