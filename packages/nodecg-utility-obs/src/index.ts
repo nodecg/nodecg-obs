@@ -217,6 +217,11 @@ export class OBSUtility extends OBSWebSocket {
 			}
 		});
 
+		(this as any).on('error', (error: Error) => {
+			log.error(error);
+			this._reconnectToOBS();
+		});
+
 		this.on('ConnectionClosed', () => {
 			this._reconnectToOBS();
 		});
