@@ -17,8 +17,7 @@ addons:
     packages:
       - google-chrome-stable
 before_install:
-  - npm install -g bower
-  - npm install -g lerna@^3
+  - npm install -g bower lerna@^3 nodecg-cli
   - lerna bootstrap
 script:
   # Run our tests with virtual X frame buffer, needed for the selenium browser tests
