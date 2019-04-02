@@ -141,7 +141,7 @@ class OBSUtility extends OBSWebSocket {
         });
         nodecg.listenFor(`${namespace}:startStreaming`, (_data, callback) => {
             try {
-                this.send('StartStreaming');
+                this.send('StartStreaming', {});
             }
             catch (error) {
                 log.error('Error starting the streaming:', error);
