@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0](https://github.com/nodecg/nodecg-obs/compare/v5.0.6...v6.0.0) (2019-04-02)
+
+
+### chore
+
+* **package:** update obs-websocket-js ([cd98e83](https://github.com/nodecg/nodecg-obs/commit/cd98e83))
+
+
+### BREAKING CHANGES
+
+* **package:** Updated obs-websocket-js to v3. See https://github.com/haganbmj/obs-websocket-js#upgrading-from-2x-to-3x for migration steps.
+
+
+
+
+
 ## [5.0.6](https://github.com/nodecg/nodecg-obs/compare/v5.0.5...v5.0.6) (2019-01-12)
 
 
