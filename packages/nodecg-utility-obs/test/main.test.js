@@ -115,7 +115,8 @@ test.cb('obs:previewScene failure', t => {
 	}, 0);
 });
 
-test.cb('obs:transition - without hook', t => {
+test.cb('obs:transition studio - without hook', t => {
+	t.context.obs.replicants.studioMode.value = true;
 	t.plan(4);
 
 	// Tell our #send stub to return a promise that resolves.
@@ -134,7 +135,8 @@ test.cb('obs:transition - without hook', t => {
 	}, 0);
 });
 
-test.cb('obs:transition - with sync hook', t => {
+test.cb('obs:transition studio - with sync hook', t => {
+	t.context.obs.replicants.studioMode.value = true;
 	t.plan(5);
 
 	// Tell our #transitionToProgram stub to return a promise that resolves.
@@ -157,7 +159,8 @@ test.cb('obs:transition - with sync hook', t => {
 	}, 0);
 });
 
-test.cb('obs:transition - with async hook', t => {
+test.cb('obs:transition studio - with async hook', t => {
+	t.context.obs.replicants.studioMode.value = true;
 	t.plan(5);
 
 	// Tell our #send stub to return a promise that resolves.
@@ -180,7 +183,8 @@ test.cb('obs:transition - with async hook', t => {
 	}, 0);
 });
 
-test.cb('obs:transition - with sceneName', t => {
+test.cb('obs:transition studio - with sceneName', t => {
+	t.context.obs.replicants.studioMode.value = true;
 	t.plan(4);
 
 	// Tell our stubs to return a promise that resolves.
@@ -196,6 +200,41 @@ test.cb('obs:transition - with sceneName', t => {
 		t.deepEqual(t.context.obs.send.secondCall.args, ['TransitionToProgram', {'with-transition': {name: 'transition-name', duration: 250}}]);
 		t.end();
 	}, 0);
+});
+
+test.cb('obs:transition non-studio - with sceneName', t => {
+	t.context.obs.replicants.studioMode.value = false;
+
+	// Tell our stubs to return a promise that resolves.
+	t.context.obs.send.resolves();
+
+	t.context.obs.replicants.websocket.value.status = 'connected';
+	t.context.nodecg.emit('obs:transition', { sceneName: 'Foo Scene'});
+
+	setTimeout(() => {
+		t.true(t.context.obs.replicants.transitioning.value);
+		t.deepEqual(t.context.obs.send.firstCall.args, ['SetCurrentScene', {'scene-name': 'Foo Scene'}]);
+		t.end()
+	});
+});
+
+test.cb('obs:transition non-studio - changes transition', t => {
+	t.context.obs.replicants.studioMode.value = false;
+
+	// Tell our stubs to return a promise that resolves.
+	t.context.obs.send.resolves();
+
+	t.context.obs.replicants.websocket.value.status = 'connected';
+	t.context.nodecg.emit('obs:transition', {name: 'transition-name', duration: 250, sceneName: 'Foo Scene'});
+
+	setTimeout(() => {
+		t.true(t.context.obs.replicants.transitioning.value);
+		t.true(t.context.obs.send.calledThrice);
+		t.deepEqual(t.context.obs.send.firstCall.args, ['SetCurrentTransition', {'transition-name': 'transition-name'}]);
+		t.deepEqual(t.context.obs.send.secondCall.args, ['SetTransitionDuration', {duration: 250}]);
+		t.deepEqual(t.context.obs.send.thirdCall.args, ['SetCurrentScene', {'scene-name': 'Foo Scene'}]);
+		t.end()
+	});
 });
 
 test.cb('obs:transition failure', t => {
