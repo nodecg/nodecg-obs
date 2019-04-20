@@ -189,7 +189,7 @@ export class OBSUtility extends OBSWebSocket {
 					try {
 						await this.send('SetCurrentTransition', { "transition-name": name });
 					} catch (error) {
-						log.error('Error setting scene for transition:', error);
+						log.error('Error setting current transition:', error);
 						if (callback && !callback.handled) {
 							callback(error);
 						}
@@ -201,7 +201,7 @@ export class OBSUtility extends OBSWebSocket {
 					try {
 						await this.send('SetTransitionDuration', { duration: duration });
 					} catch (error) {
-						log.error('Error setting duration for transition:', error);
+						log.error('Error setting transition duration:', error);
 						if (callback && !callback.handled) {
 							callback(error);
 						}
@@ -210,6 +210,7 @@ export class OBSUtility extends OBSWebSocket {
 				}
 
 				try {
+					// Mark that we're starting to transition. Resets to false after SwitchScenes.
 					this.replicants.transitioning.value = true;
 					await this.send('SetCurrentScene', {'scene-name': sceneName});
 				} catch (error) {
@@ -465,7 +466,9 @@ export class OBSUtility extends OBSWebSocket {
 			'with-transition': transitionConfig
 		};
 
+		// Mark that we're starting to transition. Resets to false after SwitchScenes.
 		this.replicants.transitioning.value = true;
+
 		if (typeof this.hooks.preTransition === 'function') {
 			const modifiedTransitionOpts = await this.hooks.preTransition(clone(transitionOpts));
 			if (modifiedTransitionOpts) {
