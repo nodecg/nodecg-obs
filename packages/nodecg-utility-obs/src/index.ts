@@ -158,26 +158,69 @@ export class OBSUtility extends OBSWebSocket {
 		});
 
 		nodecg.listenFor(`${namespace}:transition`, async ({name, duration, sceneName} = {}, callback) => {
-			if (sceneName) {
+			if (studioMode.value) {
+				// If in studio mode, set the preview scene, and then transition to it
+
+				if (sceneName) {
+					try {
+						await this.send('SetPreviewScene', {'scene-name': sceneName});
+					} catch (error) {
+						log.error('Error setting preview scene for transition:', error);
+						if (callback && !callback.handled) {
+							callback(error);
+						}
+						return;
+					}
+				}
+
 				try {
-					await this.send('SetPreviewScene', {'scene-name': sceneName});
+					await this._transition(name, duration);
 				} catch (error) {
-					log.error('Error setting preview scene for transition:', error);
+					log.error('Error transitioning:', error);
 					if (callback && !callback.handled) {
 						callback(error);
 					}
 					return;
 				}
-			}
+			} else {
+				// If not in studio mode, set the transition params and then set the scene
 
-			try {
-				await this._transition(name, duration);
-			} catch (error) {
-				log.error('Error transitioning:', error);
-				if (callback && !callback.handled) {
-					callback(error);
+				if (name) {
+					try {
+						await this.send('SetCurrentTransition', { "transition-name": name });
+					} catch (error) {
+						log.error('Error setting current transition:', error);
+						if (callback && !callback.handled) {
+							callback(error);
+						}
+						return;
+					}
 				}
-				return;
+
+				if (duration) {
+					try {
+						await this.send('SetTransitionDuration', { duration: duration });
+					} catch (error) {
+						log.error('Error setting transition duration:', error);
+						if (callback && !callback.handled) {
+							callback(error);
+						}
+						return;
+					}
+				}
+
+				try {
+					// Mark that we're starting to transition. Resets to false after SwitchScenes.
+					this.replicants.transitioning.value = true;
+					await this.send('SetCurrentScene', {'scene-name': sceneName});
+				} catch (error) {
+					this.replicants.transitioning.value = false;
+					log.error('Error setting scene for transition:', error);
+					if (callback && !callback.handled) {
+						callback(error);
+					}
+					return;
+				}
 			}
 
 			if (callback && !callback.handled) {
@@ -423,7 +466,9 @@ export class OBSUtility extends OBSWebSocket {
 			'with-transition': transitionConfig
 		};
 
+		// Mark that we're starting to transition. Resets to false after SwitchScenes.
 		this.replicants.transitioning.value = true;
+
 		if (typeof this.hooks.preTransition === 'function') {
 			const modifiedTransitionOpts = await this.hooks.preTransition(clone(transitionOpts));
 			if (modifiedTransitionOpts) {
