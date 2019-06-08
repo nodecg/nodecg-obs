@@ -36,7 +36,7 @@
   ],
   "devDependencies": {
     "@t2ym/polymer-cli": "^1.3.0",
-    "@t2ym/web-component-tester": "^6.0.0",
-    "wct-istanbul": "^0.12.0"
+    "@t2ym/web-component-tester": "^6.0.3",
+    "wct-istanbul": "^0.14.3"
   }
 }
