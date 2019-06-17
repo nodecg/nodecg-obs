@@ -209,12 +209,12 @@ test.cb('obs:transition non-studio - with sceneName', t => {
 	t.context.obs.send.resolves();
 
 	t.context.obs.replicants.websocket.value.status = 'connected';
-	t.context.nodecg.emit('obs:transition', { sceneName: 'Foo Scene'});
+	t.context.nodecg.emit('obs:transition', {sceneName: 'Foo Scene'});
 
 	setTimeout(() => {
 		t.true(t.context.obs.replicants.transitioning.value);
 		t.deepEqual(t.context.obs.send.firstCall.args, ['SetCurrentScene', {'scene-name': 'Foo Scene'}]);
-		t.end()
+		t.end();
 	});
 });
 
@@ -233,7 +233,7 @@ test.cb('obs:transition non-studio - changes transition', t => {
 		t.deepEqual(t.context.obs.send.firstCall.args, ['SetCurrentTransition', {'transition-name': 'transition-name'}]);
 		t.deepEqual(t.context.obs.send.secondCall.args, ['SetTransitionDuration', {duration: 250}]);
 		t.deepEqual(t.context.obs.send.thirdCall.args, ['SetCurrentScene', {'scene-name': 'Foo Scene'}]);
-		t.end()
+		t.end();
 	});
 });
 
