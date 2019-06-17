@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.1.0](https://github.com/nodecg/nodecg-obs/compare/v6.0.0...v6.1.0) (2019-06-17)
+
+**Note:** Version bump only for package nodecg-obs-scene
+
+
+
+
+
 # [6.0.0](https://github.com/nodecg/nodecg-obs/compare/v5.0.6...v6.0.0) (2019-04-02)
 
 **Note:** Version bump only for package nodecg-obs-scene

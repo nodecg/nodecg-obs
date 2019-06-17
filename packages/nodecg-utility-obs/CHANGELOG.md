@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.1.0](https://github.com/nodecg/nodecg-obs/compare/v6.0.0...v6.1.0) (2019-06-17)
+
+
+### Features
+
+* **api:** support transition outside of studio mode ([#7](https://github.com/nodecg/nodecg-obs/issues/7)) ([fc128e4](https://github.com/nodecg/nodecg-obs/commit/fc128e4))
+* **nodecg-utility-obs:** update obs-websocket-js ([d05f015](https://github.com/nodecg/nodecg-obs/commit/d05f015))
+
+
+
+
+
 # [6.0.0](https://github.com/nodecg/nodecg-obs/compare/v5.0.6...v6.0.0) (2019-04-02)
 
 
