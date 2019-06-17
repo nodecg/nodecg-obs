@@ -323,10 +323,14 @@ class OBSUtility extends OBSWebSocket {
      */
     _updateProgramScene() {
         return this.send('GetCurrentScene').then(res => {
-            this.replicants.programScene.value = {
-                name: res.name,
-                sources: res.sources
-            };
+            // This conditional is required because of this bug:
+            // https://github.com/Palakis/obs-websocket/issues/346
+            if (res.name && res.sources) {
+                this.replicants.programScene.value = {
+                    name: res.name,
+                    sources: res.sources
+                };
+            }
             return res;
         }).catch(err => {
             this.log.error('Error updating program scene:', err);
@@ -337,10 +341,14 @@ class OBSUtility extends OBSWebSocket {
      */
     _updatePreviewScene() {
         return this.send('GetPreviewScene').then(res => {
-            this.replicants.previewScene.value = {
-                name: res.name,
-                sources: res.sources
-            };
+            // This conditional is required because of this bug:
+            // https://github.com/Palakis/obs-websocket/issues/346
+            if (res.name && res.sources) {
+                this.replicants.previewScene.value = {
+                    name: res.name,
+                    sources: res.sources
+                };
+            }
         }).catch(err => {
             if (err.error === 'studio mode not enabled') {
                 this.replicants.previewScene.value = null;

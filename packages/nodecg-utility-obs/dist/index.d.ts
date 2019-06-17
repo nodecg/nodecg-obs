@@ -48,7 +48,7 @@ export declare class OBSUtility extends OBSWebSocket {
         messageId: string;
         status: "ok";
         name: string;
-        sources: OBSWebSocket.Source[];
+        sources: OBSWebSocket.SceneItem[];
     }, void, void]>;
     /**
      * Attempt to reconnect to OBS, and keep re-trying every 5s until successful.
@@ -69,7 +69,7 @@ export declare class OBSUtility extends OBSWebSocket {
         messageId: string;
         status: "ok";
         name: string;
-        sources: OBSWebSocket.Source[];
+        sources: OBSWebSocket.SceneItem[];
     }, void, void]>;
     /**
      * Updates the sceneList replicant with the current value from OBS.
@@ -90,7 +90,7 @@ export declare class OBSUtility extends OBSWebSocket {
         messageId: string;
         status: "ok";
         name: string;
-        sources: OBSWebSocket.Source[];
+        sources: OBSWebSocket.SceneItem[];
     }>;
     /**
      * Updates the previewScene replicant with the current value from OBS.
