@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.1.2](https://github.com/nodecg/nodecg-obs/compare/v6.1.1...v6.1.2) (2019-06-17)
+
+
+### Bug Fixes
+
+* **schemas:** add missing props to obs_source schema ([fdb0ccd](https://github.com/nodecg/nodecg-obs/commit/fdb0ccd))
+
+
+
+
+
 ## [6.1.1](https://github.com/nodecg/nodecg-obs/compare/v6.1.0...v6.1.1) (2019-06-17)
 
 
