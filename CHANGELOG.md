@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.1.1](https://github.com/nodecg/nodecg-obs/compare/v6.1.0...v6.1.1) (2019-06-17)
+
+
+### Bug Fixes
+
+* **nodecg-utility-obs:** compensate for obs-websocket bug ([9e8ca41](https://github.com/nodecg/nodecg-obs/commit/9e8ca41))
+
+
+
+
+
 # [6.1.0](https://github.com/nodecg/nodecg-obs/compare/v6.0.0...v6.1.0) (2019-06-17)
 
 
