@@ -20,5 +20,7 @@ export type ProgramScene = null | {
 		volume: number;
 		x: number;
 		y: number;
+		parentGroupName?: string;
+		groupChildren?: any[];
 	}[];
 };

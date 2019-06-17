@@ -38,6 +38,13 @@
 		},
 		"y": {
 			"type": "number"
+		},
+		"parentGroupName": {
+			"type": "string"
+		},
+		"groupChildren": {
+			"type": "array",
+			"items": {}
 		}
 	},
 	"required": [
