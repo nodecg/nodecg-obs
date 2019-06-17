@@ -10,6 +10,8 @@ export type ProgramScene = null | {
 	sources: {
 		cx: number;
 		cy: number;
+		id: number;
+		locked: boolean;
 		name: string;
 		render: boolean;
 		source_cx: number;

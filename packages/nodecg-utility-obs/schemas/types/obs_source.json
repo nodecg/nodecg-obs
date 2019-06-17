@@ -9,6 +9,12 @@
 		"cy": {
 			"type": "number"
 		},
+		"id": {
+			"type": "number"
+		},
+		"locked": {
+			"type": "boolean"
+		},
 		"name": {
 			"type": "string"
 		},
@@ -37,6 +43,8 @@
 	"required": [
 		"cx",
 		"cy",
+		"id",
+		"locked",
 		"name",
 		"render",
 		"source_cx",
