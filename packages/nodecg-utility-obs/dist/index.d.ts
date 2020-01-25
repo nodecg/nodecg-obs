@@ -1,4 +1,4 @@
-import * as OBSWebSocket from 'obs-websocket-js';
+import OBSWebSocket = require('obs-websocket-js');
 import { NodeCG, Replicant, Logger } from 'nodecg/types/server';
 import { Websocket } from '../types/schemas/websocket';
 import { ProgramScene } from '../types/schemas/programScene';
