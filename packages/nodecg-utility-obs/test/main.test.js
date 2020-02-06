@@ -392,7 +392,6 @@ test('#_connectToOBS', async t => {
 		password: 'foo'
 	};
 
-	// Fresh connection.
 	await t.context.obs._connectToOBS();
 
 	t.true(t.context.obs.connect.calledOnce);
@@ -405,16 +404,9 @@ test('#_connectToOBS', async t => {
 	t.is(t.context.obs.replicants.websocket.value.status, 'connected');
 	t.true(t.context.obs._fullUpdate.calledOnce);
 
-	// Error: attempting to connect when already connected.
 	t.throws(() => {
 		return t.context.obs._connectToOBS();
 	}, 'Attempted to connect to OBS while already connected!');
-
-	// Error: attempting to connect when a connection is in-flight.
-	t.context.obs.replicants.websocket.value.status = 'connecting';
-	t.throws(() => {
-		return t.context.obs._connectToOBS();
-	}, 'Attempted to connect to OBS while a connection was already in-progress!');
 });
 
 test('#_fullUpdate', async t => {

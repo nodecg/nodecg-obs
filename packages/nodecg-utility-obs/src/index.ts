@@ -322,10 +322,6 @@ export class OBSUtility extends OBSWebSocket {
 			throw new Error('Attempted to connect to OBS while already connected!');
 		}
 
-		if (websocketConfig.value.status === 'connecting') {
-			throw new Error('Attempted to connect to OBS while a connection was already in-progress!');
-		}
-
 		websocketConfig.value.status = 'connecting';
 
 		return this.connect({
