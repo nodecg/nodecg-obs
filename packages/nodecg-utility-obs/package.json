@@ -20,7 +20,7 @@
   "license": "MIT",
   "dependencies": {
     "clone": "^2.1.1",
-    "obs-websocket-js": "^3.1.0"
+    "obs-websocket-js": "^4.0.1"
   },
   "devDependencies": {
     "app-root-path": "^2.1.0",
