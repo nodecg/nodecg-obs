@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.1.4](https://github.com/nodecg/nodecg-obs/compare/v6.1.3...v6.1.4) (2020-02-06)
+
+
+### Bug Fixes
+
+* **nodecg-utility-obs:** prevent multiple sockets from being opened at once ([46a7889](https://github.com/nodecg/nodecg-obs/commit/46a7889))
+
+
+
+
+
 ## [6.1.3](https://github.com/nodecg/nodecg-obs/compare/v6.1.2...v6.1.3) (2020-01-27)
 
 

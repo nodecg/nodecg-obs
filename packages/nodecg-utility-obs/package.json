@@ -1,6 +1,6 @@
 {
   "name": "nodecg-utility-obs",
-  "version": "6.1.3",
+  "version": "6.1.4",
   "description": "A NodeCG utility that exposes a set of Replicants, Messages, and other hooks for interacting with OBS via obs-websocket",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
