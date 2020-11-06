@@ -3,6 +3,9 @@
 	"type": "object",
 	"additionalProperties": false,
 	"properties": {
+		"alignment": {
+			"type": "number"
+		},
 		"cx": {
 			"type": "number"
 		},
@@ -13,6 +16,9 @@
 			"type": "number"
 		},
 		"locked": {
+			"type": "boolean"
+		},
+		"muted": {
 			"type": "boolean"
 		},
 		"name": {
