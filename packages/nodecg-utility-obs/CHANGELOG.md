@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.1.6](https://github.com/nodecg/nodecg-obs/compare/v6.1.5...v6.1.6) (2020-11-06)
+
+
+### Bug Fixes
+
+* **schemas:** update schema for obs-websocket 4.8 ([#13](https://github.com/nodecg/nodecg-obs/issues/13)) ([f182070](https://github.com/nodecg/nodecg-obs/commit/f1820702f6b964ab7a359ca8e3d96177ce8baa9a))
+
+
+
+
+
 ## [6.1.5](https://github.com/nodecg/nodecg-obs/compare/v6.1.4...v6.1.5) (2020-02-06)
 
 
