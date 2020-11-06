@@ -13,7 +13,6 @@
     "test": "test"
   },
   "scripts": {
-    "test": "wct",
     "serve": "polyserve",
     "postinstall": "bower install"
   },

@@ -12,8 +12,6 @@
     "test": "test"
   },
   "scripts": {
-    "pretest": "polymer lint",
-    "test": "wct",
     "serve": "polyserve",
     "postinstall": "bower install"
   },
