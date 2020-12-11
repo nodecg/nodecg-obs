@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.1.7](https://github.com/nodecg/nodecg-obs/compare/v6.1.6...v6.1.7) (2020-12-11)
+
+**Note:** Version bump only for package nodecg-widget-obs
+
+
+
+
+
 ## [6.1.6](https://github.com/nodecg/nodecg-obs/compare/v6.1.5...v6.1.6) (2020-11-06)
 
 **Note:** Version bump only for package nodecg-widget-obs

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.1.7](https://github.com/nodecg/nodecg-obs/compare/v6.1.6...v6.1.7) (2020-12-11)
+
+
+### Bug Fixes
+
+* update nodecg ([f313a9d](https://github.com/nodecg/nodecg-obs/commit/f313a9d45387c7c4bc10121b7e5fbec45bf69f8b))
+
+
+
+
+
 ## [6.1.6](https://github.com/nodecg/nodecg-obs/compare/v6.1.5...v6.1.6) (2020-11-06)
 
 
